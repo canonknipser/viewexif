@@ -240,7 +240,7 @@ public function get_exif_data($event)
 
 			$targeturl = 'http://maps.google.com/maps?q='.$lat_prefix.$gps_int[0].','.$lon_prefix.$gps_int[1].'&z=17';
 			$targetlink = '<a href="'.$targeturl.'" target="_blank">'.$this->user->lang['VIEWEXIF_CLICK_HERE'].'</a>';
-			$exif_data[] = array('EXIF_NAME' =>"$this->user->lang['VIEWEXIF_NAME_MAPSERVICE']", 'EXIF_VALUE' =>$targetlink);
+			$exif_data[] = array('EXIF_NAME' =>$this->user->lang['VIEWEXIF_NAME_MAPSERVICE'], 'EXIF_VALUE' =>$targetlink);
 		}
 
 		$block_array += array(
