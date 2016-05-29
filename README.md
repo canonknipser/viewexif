@@ -31,13 +31,13 @@ Simpke visit some attached images at your borad. It will show use some exif data
 
 ## Update
 1. Download the updated extension. You can do itby downloading the [latest ZIP-archive of `master` branch of its GitHub repository](https://github.com/canonknipser/viewexif/archive/master.zip).
-2. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> View Exif` and click `Disable`.
+2. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Disable`.
 3. Copy the contents of the downloaded `cronstatus-master` folder to `/ext/canonknipser/viewexif/`.
-4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> View Exif` and click `Enable`.
+4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Enable`.
 5. Click `Details` or `Re-Check all versions` link to follow updates.
 
 ## Uninstallation
-Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> View Exif` and click `Disable`.
+Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Disable`.
 
 For permanent uninstallation click `Delete Data` and then you can safely delete the `/ext/canonknipser/viewexif/` folder.
 
