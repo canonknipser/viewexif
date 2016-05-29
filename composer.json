@@ -20,7 +20,7 @@
         "phpbb/epv": "dev-master"
     },
     "extra": {
-        "display-name": "Show exif-data for attached images by canonknipser",
+        "display-name": "Show exif-data",
         "soft-require": {
             "phpbb/phpbb": "~3.1"
         }
