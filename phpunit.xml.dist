@@ -11,6 +11,7 @@
          syntaxCheck="false"
          verbose="true"
          bootstrap="../../../../tests/bootstrap.php"
+         disable-tls="true"
 >
 	<testsuites>
 		<testsuite name="Extension Test Suite">
