@@ -22,10 +22,10 @@ class main_listener implements EventSubscriberInterface
 {
 static public function getSubscribedEvents()
 {
-    return array(
-        'core.user_setup'  => 'load_language_on_setup',
-        'core.parse_attachments_modify_template_data' => 'get_exif_data',
-    );
+	return array(
+		'core.user_setup'  => 'load_language_on_setup',
+		'core.parse_attachments_modify_template_data' => 'get_exif_data',
+	);
 }
 
 /* @var \phpbb\controller\helper */
@@ -45,7 +45,7 @@ protected $user;
 	* @param string			$root_path	phpBB root path
 
  */
-public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config,  $root_path, \phpbb\user $user)
+public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $root_path, \phpbb\user $user)
 {
 	$this->helper = $helper;
 	$this->template = $template;
@@ -56,13 +56,13 @@ public function __construct(\phpbb\controller\helper $helper, \phpbb\template\te
 }
 
 public function load_language_on_setup($event)
-    {
-        $lang_set_ext = $event['lang_set_ext'];
-        $lang_set_ext[] = array(
-            'ext_name' => 'canonknipser/viewexif',
-            'lang_set' => 'viewexif',
-        );
-        $event['lang_set_ext'] = $lang_set_ext;
+{
+	$lang_set_ext = $event['lang_set_ext'];
+	$lang_set_ext[] = array(
+		'ext_name' => 'canonknipser/viewexif',
+		'lang_set' => 'viewexif',
+	);
+	$event['lang_set_ext'] = $lang_set_ext;
     }
 public function get_exif_data($event)
 {
@@ -104,7 +104,7 @@ public function get_exif_data($event)
 	{
 		// We got some data
 //	echo "exif found<br>";
-		if(isset($exif["EXIF"]["DateTimeOriginal"]))
+		if (isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
 			$timestamp_year   = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
 			$timestamp_month  = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
@@ -115,12 +115,12 @@ public function get_exif_data($event)
 			$timestamp        = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_DATE'], 'EXIF_VALUE' => $this->user->format_date($timestamp));
 		}
-		if(isset($exif["EXIF"]["FocalLength"]))
+		if (isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_FOCAL'], 'EXIF_VALUE' => sprintf($this->user->lang['VIEWEXIF_EXIF_FOCAL_EXP'], ($num/$den)));
 		}
-		if(isset($exif["EXIF"]["ExposureTime"]))
+		if (isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
 			if ($num > $den)
@@ -133,7 +133,7 @@ public function get_exif_data($event)
 			}
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_EXPOSURE'], 'EXIF_VALUE' => sprintf($this->user->lang['VIEWEXIF_EXIF_EXPOSURE_EXP'], $exif_exposure));
 		}
-		if(isset($exif["EXIF"]["FNumber"]))
+		if (isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FNumber"]);
 			if ($den > 0)
@@ -145,7 +145,7 @@ public function get_exif_data($event)
 				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_APERTURE'], 'EXIF_VALUE' => "f/??");
 			}
 		}
-		if(isset($exif["EXIF"]["ISOSpeedRatings"]))
+		if (isset($exif["EXIF"]["ISOSpeedRatings"]))
 		{
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_ISO'], 'EXIF_VALUE' => htmlspecialchars($exif["EXIF"]["ISOSpeedRatings"]));
 		}
@@ -153,7 +153,7 @@ public function get_exif_data($event)
 		{
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_WHITEB'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')]);
 		}
-		if(isset($exif["EXIF"]["Flash"]))
+		if (isset($exif["EXIF"]["Flash"]))
 		{
 			if (isset($this->user->lang['VIEWEXIF_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
@@ -192,7 +192,7 @@ public function get_exif_data($event)
 			}
 		}
 
-		if(isset($exif['GPS']['GPSLatitude']))
+		if (isset($exif['GPS']['GPSLatitude']))
 		{
 			$lat = $exif['GPS']['GPSLatitude'];
 			list($num, $dec) = explode('/', $lat[0]);
@@ -247,7 +247,7 @@ public function get_exif_data($event)
 		'S_HAS_EXIF'		=> (!empty($exif_data)) ? true : false,
 		);
 
-        $event['block_array'] = $block_array;
+		$event['block_array'] = $block_array;
 /*
 		foreach ($event['block_array']['_exifs'] as $exifnam => $exifV)
 		{
