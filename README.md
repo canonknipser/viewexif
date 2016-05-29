@@ -22,12 +22,27 @@ You can install this extension on the latest version of [phpBB 3.1](https://www.
 1. Download the extension. You can do it by downloading the [latest ZIP-archive of `master` branch of its GitHub repository](https://github.com/canonknipser/viewexif/archive/master.zip).
 2. Check out the existence of the folder `/ext/canonknipser/viewexif/` in the root of your board folder. Create folders if necessary.
 3. Copy the contents of the downloaded `viewexif-master` folder to `/ext/canonknipser/viewexif/`.
-4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Cron Status`.
+4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data`.
 5. Click `Enable`.
 
 ## Usage
 ### Nothing to do
-Simpke visit some attached images at your borad. It will show use some exif data
+Simple visit some attached images at your borad. It will show use some exif data.
+This extension uses the buildin php exif library, to keep it as simple as possible.
+Currently, following exif data will show up, if present:
+1. DateTimeOriginal (transformed to user's chosen date/time-format)
+2. Focal length
+3. Exposure time
+4. Aperture (f-Stop-Number)
+5. ISO speed rating
+6. White balance
+7. Flash information
+8. Camera model
+9. Exposure program
+10. Exposure bias
+11. Metering mode
+12. Link to photo position on google maps
+
 
 ## Update
 1. Download the updated extension. You can do itby downloading the [latest ZIP-archive of `master` branch of its GitHub repository](https://github.com/canonknipser/viewexif/archive/master.zip).
@@ -42,6 +57,6 @@ Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -
 For permanent uninstallation click `Delete Data` and then you can safely delete the `/ext/canonknipser/viewexif/` folder.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
+[GNU General Public License v3](http://opensource.org/licenses/GPL-3.0)
 
-© 2014 - John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
+© 2016 - Frank Jakobs (https://github.com/canonknipser)
