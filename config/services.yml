@@ -1,0 +1,11 @@
+services:
+    canonknipser.viewexif.listener:       # name of the service you want to register
+        class: canonknipser\viewexif\event\main_listener
+        arguments:
+            - '@controller.helper'
+            - '@template'
+            - '@config'
+            -  %core.root_path%
+            - '@user'
+        tags:
+            - { name: event.listener }
