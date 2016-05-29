@@ -57,6 +57,6 @@ Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -
 For permanent uninstallation click `Delete Data` and then you can safely delete the `/ext/canonknipser/viewexif/` folder.
 
 ## License
-[GNU General Public License v3](http://opensource.org/licenses/GPL-3.0)
+[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
 © 2016 - Frank Jakobs (https://github.com/canonknipser)
