@@ -63,7 +63,8 @@ public function load_language_on_setup($event)
 		'lang_set' => 'viewexif',
 	);
 	$event['lang_set_ext'] = $lang_set_ext;
-    }
+}
+
 public function get_exif_data($event)
 {
 	$attachment = $event['attachment'];
