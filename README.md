@@ -10,6 +10,7 @@ viewexif display some exif data for attached images
 
 
 ## Quick Installation
+(Availiable when published in the extensions DB)
 You can quickly install this extension on the latest version of [phpBB 3.1](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev](https://github.com/phpbb/phpbb3) by doing the following:
 
 1. Upload the extension with "[Upload Extensions](https://github.com/BoardTools/upload)".
@@ -30,6 +31,7 @@ You can install this extension on the latest version of [phpBB 3.1](https://www.
 Simple visit some attached images at your borad. It will show use some exif data.
 This extension uses the buildin php exif library, to keep it as simple as possible.
 Currently, following exif data will show up, if present:
+
 1. DateTimeOriginal (transformed to user's chosen date/time-format)
 2. Focal length
 3. Exposure time
@@ -45,7 +47,7 @@ Currently, following exif data will show up, if present:
 
 
 ## Update
-1. Download the updated extension. You can do itby downloading the [latest ZIP-archive of `master` branch of its GitHub repository](https://github.com/canonknipser/viewexif/archive/master.zip).
+1. Download the updated extension. You can do it by downloading the [latest ZIP-archive of `master` branch of its GitHub repository](https://github.com/canonknipser/viewexif/archive/master.zip).
 2. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Disable`.
 3. Copy the contents of the downloaded `cronstatus-master` folder to `/ext/canonknipser/viewexif/`.
 4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Enable`.
@@ -60,3 +62,5 @@ For permanent uninstallation click `Delete Data` and then you can safely delete 
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
 © 2016 - Frank Jakobs (https://github.com/canonknipser)
+
+extension based on the 3.0.x-mod [NV Exif Data](https://www.phpbb.com/community/viewtopic.php?t=1107475) by [nickvergessen](https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=315319) 

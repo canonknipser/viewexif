@@ -25,7 +25,9 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'VIEWEXIF_EXIF_CAPTION'				=> 'EXIF-Daten',
 	'VIEWEXIF_EXIF_APERTURE'			=> 'Blendenwert',
-	'VIEWEXIF_EXIF_CAM_MODEL'			=> 'Kamera-Model',
+	'VIEWEXIF_EXIF_CAM_MODEL'			=> 'Kamera-Modell',
+	'VIEWEXIF_EXIF_CAM_MAKE'			=> 'Kamera-Hersteller',
+
 	'VIEWEXIF_EXIF_DATE'				=> 'Bild aufgenommen am/um',
 
 	'VIEWEXIF_EXIF_EXPOSURE'			=> 'Belichtungszeit',
@@ -35,7 +37,7 @@ $lang = array_merge($lang, array(
 	'VIEWEXIF_EXIF_EXPOSURE_PROG'		=> 'Belichtungsmodus',
 	'VIEWEXIF_EXIF_EXPOSURE_PROG_0'		=> 'Nicht definert',
 	'VIEWEXIF_EXIF_EXPOSURE_PROG_1'		=> 'Manuell',
-	'VIEWEXIF_EXIF_EXPOSURE_PROG_2'		=> 'Normales Programm',
+	'VIEWEXIF_EXIF_EXPOSURE_PROG_2'		=> 'Automatikprogramm',
 	'VIEWEXIF_EXIF_EXPOSURE_PROG_3'		=> 'Blendenvorwahl',
 	'VIEWEXIF_EXIF_EXPOSURE_PROG_4'		=> 'Zeitvorwahl',
 	'VIEWEXIF_EXIF_EXPOSURE_PROG_5'		=> 'Kreativprogramm (optimiert auf größtmöglichen Schärfebereich)',
@@ -94,7 +96,7 @@ $lang = array_merge($lang, array(
 	'VIEWEXIF_EXIF_WHITEB_AUTO'			=> 'Automatisch',
 	'VIEWEXIF_EXIF_WHITEB_MANU'			=> 'Manuell',
 
-	'VIEWEXIF_SHOW_EXIF'					=> 'show/hide',
+	'VIEWEXIF_SHOW_EXIF'				=> 'anzeigen/verbergen',
 	'VIEWEXIF_CLICK_HERE'				=> 'Hier klicken',
 	'VIEWEXIF_NAME_MAPSERVICE'			=> 'Google Maps'
 ));

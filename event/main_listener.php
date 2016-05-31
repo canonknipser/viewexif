@@ -161,6 +161,10 @@ public function get_exif_data($event)
 				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_FLASH'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]);
 			}
 		}
+		if (isset($exif["IFD0"]["Make"]))
+		{
+			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_CAM_MAKE'], 'EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Make"])));
+		}
 		if (isset($exif["IFD0"]["Model"]))
 		{
 			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_CAM_MODEL'], 'EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Model"])));
@@ -238,14 +242,15 @@ public function get_exif_data($event)
 			$gps_int = array($lat_s + ($lat_m / 60.0) + ($lat_v / 3600.0), $lon_s  + ($lon_m / 60.0) + ($lon_v / 3600.0));
 			//$gps_int = array($lat_prefix+$lat_s + $lat_m / 60.0 + $lat_v / 3600.0, $lon_prefix+$lon_s  + $lon_m / 60.0 + $lon_v / 3600.0);
 
-			$targeturl = 'http://maps.google.com/maps?q='.$lat_prefix.$gps_int[0].','.$lon_prefix.$gps_int[1].'&z=17';
-			$targetlink = '<a href="'.$targeturl.'" target="_blank">'.$this->user->lang['VIEWEXIF_CLICK_HERE'].'</a>';
+			$targeturl = 'https://maps.google.com/maps?q='.$lat_prefix.$gps_int[0].','.$lon_prefix.$gps_int[1].'&z=17';
+			$targetlink = '<a href="'.$targeturl.'" target="viewexif_gps">'.$this->user->lang['VIEWEXIF_CLICK_HERE'].'</a>';
 			$exif_data[] = array('EXIF_NAME' =>$this->user->lang['VIEWEXIF_NAME_MAPSERVICE'], 'EXIF_VALUE' =>$targetlink);
 		}
 
 		$block_array += array(
 		'_exifs'			=> $exif_data,
 		'S_HAS_EXIF'		=> (!empty($exif_data)) ? true : false,
+		'ATTACH_ID'			=> "hide".$attachment['attach_id'],
 		);
 
 		$event['block_array'] = $block_array;

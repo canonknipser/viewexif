@@ -25,6 +25,7 @@ $lang = array_merge($lang, array(
 	'VIEWEXIF_EXIF_CAPTION'				=> 'EXIF-Data',
 	'VIEWEXIF_EXIF_APERTURE'			=> 'F-number',
 	'VIEWEXIF_EXIF_CAM_MODEL'			=> 'Camera-model',
+	'VIEWEXIF_EXIF_CAM_MAKE'			=> 'Camera-manufacturer',
 	'VIEWEXIF_EXIF_DATE'				=> 'Image taken on',
 
 	'VIEWEXIF_EXIF_EXPOSURE'			=> 'Shutter speed',
@@ -93,7 +94,7 @@ $lang = array_merge($lang, array(
 	'VIEWEXIF_EXIF_WHITEB_AUTO'			=> 'Auto',
 	'VIEWEXIF_EXIF_WHITEB_MANU'			=> 'Manual',
 
-	'VIEWEXIF_SHOW_EXIF'					=> 'show/hide',
+	'VIEWEXIF_SHOW_EXIF'				=> 'show/hide',
 	'VIEWEXIF_CLICK_HERE'				=> 'Click here',
 	'VIEWEXIF_NAME_MAPSERVICE'			=> 'Google Maps'
 ));

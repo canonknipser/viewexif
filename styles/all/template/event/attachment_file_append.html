@@ -1,10 +1,15 @@
 	<!-- IF _file.S_HAS_EXIF -->
 		<div class="exifblock">
 		{L_VIEWEXIF_EXIF_CAPTION}
+		<a title="{L_VIEWEXIF_SHOW_EXIF}" type="a" onclick="if(document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display=='none') {document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display=''}else{document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display='none'}">
+		{L_VIEWEXIF_SHOW_EXIF}</a>
 		<!-- BEGIN _file -->
+			<div class="table" id="exiftable_{_file.ATTACH_ID}">
 			<!-- BEGIN _exifs -->
-				<div class="exifline"><div class="exifleft">{_file._exifs.EXIF_NAME}{L_COLON} </div><div class="exifright">{_file._exifs.EXIF_VALUE}</div><br /></div>
+				<div class="tabrow"><div class="tabcell">{_file._exifs.EXIF_NAME}{L_COLON} </div><div class="tabcell">{_file._exifs.EXIF_VALUE}</div></div>
 			<!-- END _exifs -->
+		</div>
 		<!-- END _file -->
 		</div>
+		
 	<!-- ENDIF -->
