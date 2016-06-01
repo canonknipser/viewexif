@@ -23,8 +23,8 @@ class main_listener implements EventSubscriberInterface
 static public function getSubscribedEvents()
 {
 	return array(
-		'core.user_setup'  => 'load_language_on_setup',
-		'core.parse_attachments_modify_template_data' => 'get_exif_data',
+		'core.user_setup'								=> 'load_language_on_setup',
+		'core.parse_attachments_modify_template_data'	=> 'get_exif_data',
 	);
 }
 
@@ -33,6 +33,7 @@ protected $helper;
 
 /* @var \phpbb\template\template */
 protected $template;
+
 /* @var \phpbb\user */
 protected $user;
 
@@ -43,6 +44,7 @@ protected $user;
 	* @param \phpbb\template\template $template
 	* @param \phpbb\config	$config		Config object
 	* @param string			$root_path	phpBB root path
+	* @param \phpbb\user	$user		user object
 
  */
 public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $root_path, \phpbb\user $user)
@@ -104,7 +106,6 @@ public function get_exif_data($event)
 	if (!empty($exif["EXIF"]))
 	{
 		// We got some data
-//	echo "exif found<br>";
 		if (isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
 			$timestamp_year   = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
@@ -254,24 +255,10 @@ public function get_exif_data($event)
 		);
 
 		$event['block_array'] = $block_array;
-/*
-		foreach ($event['block_array']['_exifs'] as $exifnam => $exifV)
-		{
-			foreach ($exifV as $exif1 => $exif2)
-			{
-				echo "a) $exifnam: $exif1: $exif2<br>";
-			}
-		}
-*/
+
 	}
 
-/*
-    $this->template->assign_vars(array(
-		'VIEWEXIF_EXIFDATA'			=> $exif_data,
-		'S_HAS_EXIF'		=> (!empty($exif_data)) ? true : false,
-    ));
-*/
-	//var_dump($this->template);
+
 }
 
 }
