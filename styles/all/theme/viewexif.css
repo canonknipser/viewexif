@@ -1,5 +1,5 @@
 /* div-data for exif-formatting */
-div.exifblock {
+div.ck_ve_exifblock {
 	margin: 0;
 	overflow-x: auto;
 	overflow: hidden;
@@ -10,35 +10,15 @@ div.exifblock {
 	text-align: left;
 }
 
-div.exifline {
-	font-size: 0.75em;
-	line-height: 1.0em;
-	font-weight: normal;
-	text-align: left;
+
+div.ck_ve_table { 
+	display: none;
 }
 
-
-div.exifleft {
-	font-weight: normal;
-	text-align: left;
-	float: left;
+div.ck_ve_tabrow {
 }
 
-div.exifright {
-	margin-left: 0.2em;
-	text-align: left;
-	font-weight: normal;
-	font-style: italic;
-	float: left;
-}
-
-div.table { 
-}
-
-div.tabrow {
-}
-
-div.tabcell {
+div.ck_ve_tabcell {
 	font-size: 0.90em;
 	line-height: 1.0em;
 	font-weight: normal;
@@ -47,22 +27,22 @@ div.tabcell {
 @media screen and (min-width: 450px ) {
 
 
-    div.table { 
-      display: table; 
+    div.ck_ve_table { 
+      display: none; 
       border-collapse:collapse; 
     }
 
-	div.tabrow {
+	div.ck_ve_tabrow {
 		display: table-row; 
 	}
-	div.tabcell {
+	div.ck_ve_tabcell {
 		display: table-cell; 
 		width: 49%; 
 		font-size: 0.85em;
 		line-height: 1.0em;
 		font-weight: normal;
 	}
-	div.tabcell:nth-child(2){
+	div.ck_ve_tabcell:nth-child(2){
 		font-style: italic;
 	}
 }
