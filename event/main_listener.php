@@ -273,7 +273,6 @@ public function get_exif_data($event)
 				$lon_prefix = 'W';
 			}
 
-
 			if ($use_google)
 			{
 				$google_url = 'https://maps.google.com/maps?q=';
@@ -294,7 +293,6 @@ public function get_exif_data($event)
 		$event['block_array'] = $block_array;
 
 	}
-
 
 }
 
