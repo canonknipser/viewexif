@@ -3,8 +3,7 @@
 	<property name="vendor-name" value="canonknipser" />
 	<property name="extension-name" value="viewexif" />
 	<!--
-	Only set this to "true" if you have dependencies in the composer.json,
-	otherwise use "false".
+	Only set this to "true" if you have dependencies in the composer.json, otherwise use "false".
 	-->
 	<property name="has-dependencies" value="false" />
 

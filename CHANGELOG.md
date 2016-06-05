@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-beta3 - 2016-05-31
+## 1.0.0-RC - 2016-06-05
 
 - changed image type detection to mimetype
 - added tiff support (untestet)
