@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-beta3 - 2016-05-31
+
+- changed image type detection to mimetype
+- added tiff support (untestet)
+- use user's timezone data to calculate image datetime based on user display format preferences
+
 ## 1.0.0-beta2 - 2016-05-31
 
 - styling (used div-based tables, font-styling modified, show/hide exif-data by click)

@@ -70,24 +70,6 @@ public function load_language_on_setup($event)
 public function get_exif_data($event)
 {
 	$attachment = $event['attachment'];
-/*
-	attachment-fields
-		attach_id (Primärschlüssel) 	mediumint(8)
-		post_msg_id 					mediumint(8)
-		topic_id 						mediumint(8)
-		in_message 						tinyint(1)
-		poster_id 						mediumint(8)
-		is_orphan 						tinyint(1)
-		physical_filename 				varchar(255)
-		real_filename 					varchar(255)
-		download_count 					mediumint(8)
-		attach_comment 					text
-		extension 						varchar(100)
-		mimetype 						varchar(100)
-		filesize 						int(20)
-		filetime 						int(11)
-		thumbnail 						tinyint(1)
-*/
 	$block_array = $event['block_array']; // Template data of the attachment
 	$display_cat = $event['display_cat']; // Attachment category data
 	$download_link = $event['download_link']; // Attachment download link
@@ -95,32 +77,69 @@ public function get_exif_data($event)
 	$forum_id = $event['forum_id']; // The forum id the attachments are displayed in (false if in private message)
 	$preview= $event['preview']; // Flag indicating if we are in post preview mode
 	$update_count = $event['update_count']; // Array with attachment ids to update download count
-
+/*
+	echo "attachment<br>";
+	print_r($attachment);
+	echo "<br>-------------<br>";
+	echo "block_array<br>";
+	print_r($block_array);
+	echo "<br>-------------<br>";
+	echo "display_cat<br>";
+	print_r($display_cat);
+	echo "<br>-------------<br>";
+	echo "extensions<br>";
+	print_r($extensions);
+	echo "<br>-------------<br>";
+	echo "forum_id<br>";
+	print_r($forum_id);
+	echo "<br>-------------<br>";
+	echo "update_count<br>";
+	print_r($update_count);
+	echo "<br>-------------<br>";
+*/
 	// we need the complete physical_filename for reading exif-data:
 	$filename = $this->root_path . $this->config['upload_path'] . '/' . utf8_basename($attachment['physical_filename']);
 	//echo "$filename<br>";
 
-	// only for jpeg ...
-	$exif = ($attachment['extension'] == 'jpg' || $attachment['extension'] == 'jpeg') ? @exif_read_data($filename, 0, true) : array();
+	$use_google = true;
+
+	// we use mimetype here - and support tiff
+	$exif = ($attachment['mimetype'] == 'image/jpeg' || $attachment['mimetype'] == 'image/tiff') ? @exif_read_data($filename, 0, true) : array();
 	$exif_data = array();
 	if (!empty($exif["EXIF"]))
 	{
 		// We got some data
 		if (isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
-			$timestamp_year   = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
-			$timestamp_month  = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
-			$timestamp_day    = substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
-			$timestamp_hour   = substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
-			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
-			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
+			$timestamp_year   = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
+			$timestamp_month  = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
+			$timestamp_day    = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
+			$timestamp_hour   = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
+			$timestamp_minute = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
+			$timestamp_second = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
 			$timestamp        = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_DATE'], 'EXIF_VALUE' => $this->user->format_date($timestamp));
+			// we need to respect the timezone from user's profile, so we need to calculate the diff between user timezone and UTC
+			$date_time_zone_UTC = new \DateTimeZone("UTC");
+			$date_time_zone_user = new \DateTimeZone($this->user->data['user_timezone']);
+
+			// Create DateTime object for timestamp from Image with UTC timezone
+			$date_time_UTC = new \DateTime("@$timestamp", $date_time_zone_UTC);
+
+			// Calculate the UTC offset for the date/time contained in the $date_time_zone_user (given in seconds)
+
+			$time_offset = $date_time_zone_user->getOffset($date_time_UTC);
+/*
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME' => 'TIMEZONEDIFF',
+				'CK_VE_EXIF_VALUE' => $time_offset,
+			);
+*/
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_DATE'], 'CK_VE_EXIF_VALUE' => $this->user->format_date($timestamp - $time_offset, false, true));
 		}
 		if (isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_FOCAL'], 'EXIF_VALUE' => sprintf($this->user->lang['VIEWEXIF_EXIF_FOCAL_EXP'], ($num/$den)));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_FOCAL'], 'CK_VE_EXIF_VALUE' => sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($num/$den)));
 		}
 		if (isset($exif["EXIF"]["ExposureTime"]))
 		{
@@ -133,48 +152,48 @@ public function get_exif_data($event)
 			{
 				$exif_exposure = ' 1/' . $den/$num ;
 			}
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_EXPOSURE'], 'EXIF_VALUE' => sprintf($this->user->lang['VIEWEXIF_EXIF_EXPOSURE_EXP'], $exif_exposure));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_EXPOSURE'], 'CK_VE_EXIF_VALUE' => sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_EXP'], $exif_exposure));
 		}
 		if (isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FNumber"]);
 			if ($den > 0)
 			{
-				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_APERTURE'], 'EXIF_VALUE' => "f/" . ($num/$den));
+				$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_APERTURE'], 'CK_VE_EXIF_VALUE' => "f/" . ($num/$den));
 			}
 			else
 			{
-				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_APERTURE'], 'EXIF_VALUE' => "f/??");
+				$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_APERTURE'], 'CK_VE_EXIF_VALUE' => "f/??");
 			}
 		}
 		if (isset($exif["EXIF"]["ISOSpeedRatings"]))
 		{
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_ISO'], 'EXIF_VALUE' => htmlspecialchars($exif["EXIF"]["ISOSpeedRatings"]));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_ISO'], 'CK_VE_EXIF_VALUE' => htmlspecialchars($exif["EXIF"]["ISOSpeedRatings"]));
 		}
 		if (isset($exif["EXIF"]["WhiteBalance"]))
 		{
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_WHITEB'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')]);
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_WHITEB'], 'CK_VE_EXIF_VALUE' => $this->user->lang['CK_VE_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')]);
 		}
 		if (isset($exif["EXIF"]["Flash"]))
 		{
-			if (isset($this->user->lang['VIEWEXIF_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
-				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_FLASH'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]);
+				$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_FLASH'], 'CK_VE_EXIF_VALUE' => $this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]);
 			}
 		}
 		if (isset($exif["IFD0"]["Make"]))
 		{
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_CAM_MAKE'], 'EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Make"])));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_CAM_MAKE'], 'CK_VE_EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Make"])));
 		}
 		if (isset($exif["IFD0"]["Model"]))
 		{
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_CAM_MODEL'], 'EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Model"])));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_CAM_MODEL'], 'CK_VE_EXIF_VALUE' => htmlspecialchars(ucwords($exif["IFD0"]["Model"])));
 		}
 		if (isset($exif["EXIF"]["ExposureProgram"]))
 		{
-			if (isset($this->user->lang['VIEWEXIF_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
 			{
-				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_EXPOSURE_PROG'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]);
+				$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_EXPOSURE_PROG'], 'CK_VE_EXIF_VALUE' => $this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]);
 			}
 		}
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
@@ -188,40 +207,36 @@ public function get_exif_data($event)
 			{
 				$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
 			}
-			$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_EXPOSURE_BIAS'], 'EXIF_VALUE' => htmlspecialchars(sprintf($this->user->lang['VIEWEXIF_EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias)));
+			$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS'], 'CK_VE_EXIF_VALUE' => htmlspecialchars(sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias)));
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
 		{
-			if (isset($this->user->lang['VIEWEXIF_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
 			{
-				$exif_data[] = array('EXIF_NAME' => $this->user->lang['VIEWEXIF_EXIF_METERING_MODE'], 'EXIF_VALUE' => $this->user->lang['VIEWEXIF_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]);
+				$exif_data[] = array('CK_VE_EXIF_NAME' => $this->user->lang['CK_VE_EXIF_METERING_MODE'], 'CK_VE_EXIF_VALUE' => $this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]);
 			}
 		}
 
 		if (isset($exif['GPS']['GPSLatitude']))
 		{
+			// we have GPS data, extract the numeric values for degree, minute, second
 			$lat = $exif['GPS']['GPSLatitude'];
+
 			list($num, $dec) = explode('/', $lat[0]);
 			$lat_s = $num / $dec;
+
 			list($num, $dec) = explode('/', $lat[1]);
 			$lat_m = $num / $dec;
+
 			list($num, $dec) = explode('/', $lat[2]);
 			if ($dec != 0)
 			{
 				$lat_v = $num / $dec;
 			}
-			$lon = $exif['GPS']['GPSLongitude'];
-			list($num, $dec) = explode('/', $lon[0]);
-			$lon_s = $num / $dec;
-			list($num, $dec) = explode('/', $lon[1]);
-			$lon_m = $num / $dec;
-			list($num, $dec) = explode('/', $lon[2]);
-			if ($dec != 0)
-			{
-				$lon_v = $num / $dec;
-			}
+			// calculate decimal value for latidude, eg for google maps
+			$lat_dec = $lat_s + ($lat_m / 60.0) + ($lat_v / 3600.0);
 
-			$lat_ref = $exif['GPS']['GPSLatitudeRef'];
+					$lat_ref = $exif['GPS']['GPSLatitudeRef'];
 			if ($lat_ref == 'S')
 			{
 				$lat_prefix = 'S';
@@ -230,6 +245,24 @@ public function get_exif_data($event)
 			{
 				$lat_prefix = 'N';
 			}
+
+			$lon = $exif['GPS']['GPSLongitude'];
+
+			list($num, $dec) = explode('/', $lon[0]);
+			$lon_s = $num / $dec;
+
+			list($num, $dec) = explode('/', $lon[1]);
+			$lon_m = $num / $dec;
+
+			list($num, $dec) = explode('/', $lon[2]);
+			if ($dec != 0)
+			{
+				$lon_v = $num / $dec;
+			}
+
+			// calculate decimal value for latidude, eg for google maps
+			$lon_dec = $lon_s  + ($lon_m / 60.0) + ($lon_v / 3600.0);
+
 			$lon_ref = $exif['GPS']['GPSLongitudeRef'];
 			if ($lon_ref == 'E')
 			{
@@ -240,18 +273,22 @@ public function get_exif_data($event)
 				$lon_prefix = 'W';
 			}
 
-			$gps_int = array($lat_s + ($lat_m / 60.0) + ($lat_v / 3600.0), $lon_s  + ($lon_m / 60.0) + ($lon_v / 3600.0));
-			//$gps_int = array($lat_prefix+$lat_s + $lat_m / 60.0 + $lat_v / 3600.0, $lon_prefix+$lon_s  + $lon_m / 60.0 + $lon_v / 3600.0);
 
-			$targeturl = 'https://maps.google.com/maps?q='.$lat_prefix.$gps_int[0].','.$lon_prefix.$gps_int[1].'&z=17';
-			$targetlink = '<a href="'.$targeturl.'" target="viewexif_gps">'.$this->user->lang['VIEWEXIF_CLICK_HERE'].'</a>';
-			$exif_data[] = array('EXIF_NAME' =>$this->user->lang['VIEWEXIF_NAME_MAPSERVICE'], 'EXIF_VALUE' =>$targetlink);
+			if ($use_google)
+			{
+				$google_url = 'https://maps.google.com/maps?q=';
+				$google_zoom = '&z=17';
+				$targeturl = $google_url.$lat_prefix.$lat_dec.','.$lon_prefix.$lon_dec.$google_zoom;
+				$targetlink = '<a href="'.$targeturl.'" target="CK_VE_gps">'.$this->user->lang['CK_VE_CLICK_HERE'].'</a>';
+				$exif_data[] = array('CK_VE_EXIF_NAME' =>$this->user->lang['CK_VE_NAME_MAPSERVICE'], 'CK_VE_EXIF_VALUE' =>$targetlink);
+			}
 		}
 
 		$block_array += array(
-		'_exifs'			=> $exif_data,
-		'S_HAS_EXIF'		=> (!empty($exif_data)) ? true : false,
-		'ATTACH_ID'			=> "hide".$attachment['attach_id'],
+		'CK_VE_exifs'			=> $exif_data,
+		'S_CK_VE_HAS_EXIF'		=> (!empty($exif_data)) ? true : false,
+		// we need a unique identifier for show/hid-function in template, just use the unique attach_id
+		'CK_VE_ATTACH_ID'			=> "hide".$attachment['attach_id'],
 		);
 
 		$event['block_array'] = $block_array;

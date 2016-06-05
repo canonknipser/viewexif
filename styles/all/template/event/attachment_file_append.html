@@ -1,15 +1,20 @@
-	<!-- IF _file.S_HAS_EXIF -->
-		<div><div class="ck_ve_exifblock">
-		{L_VIEWEXIF_EXIF_CAPTION}
-		<a title="{L_VIEWEXIF_SHOW_EXIF}" type="a" onclick="if(document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display=='none') {document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display='table'}else{document.getElementById('exiftable_{_file.ATTACH_ID}') .style.display='none'}">
-		{L_VIEWEXIF_SHOW_EXIF}</a></div>
+<!-- IF _file.S_CK_VE_HAS_EXIF -->
+	<div>
+		<div class="ck_ve_exifblock">
+			{L_CK_VE_EXIF_CAPTION}
+			<a title="{L_CK_VE_SHOW_EXIF}" type="a" onclick="if(document.getElementById('ck_ve_{_file.CK_VE_ATTACH_ID}') .style.display=='none') {document.getElementById('ck_ve_{_file.CK_VE_ATTACH_ID}') .style.display='table'}else{document.getElementById('ck_ve_{_file.CK_VE_ATTACH_ID}') .style.display='none'}">
+				{L_CK_VE_SHOW_EXIF}
+			</a>
+		</div>
 		<!-- BEGIN _file -->
-			<div class="ck_ve_table" id="exiftable_{_file.ATTACH_ID}">
-			<!-- BEGIN _exifs -->
-				<div class="ck_ve_tabrow"><div class="ck_ve_tabcell">{_file._exifs.EXIF_NAME}{L_COLON} </div><div class="ck_ve_tabcell">{_file._exifs.EXIF_VALUE}</div></div>
-			<!-- END _exifs -->
-		</div>
+			<div class="ck_ve_table" id="ck_ve_{_file.CK_VE_ATTACH_ID}">
+				<!-- BEGIN CK_VE_exifs -->
+					<div class="ck_ve_tabrow">
+						<div class="ck_ve_tabcell">{_file.CK_VE_exifs.CK_VE_EXIF_NAME}{L_COLON} </div>
+						<div class="ck_ve_tabcell">{_file.CK_VE_exifs.CK_VE_EXIF_VALUE}</div>
+					</div>
+				<!-- END CK_VE_exifs -->
+			</div>
 		<!-- END _file -->
-		</div>
-		
-	<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
