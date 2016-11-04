@@ -1,5 +1,11 @@
 # Changelog
 
+(newest entries on top)
+
+## 1.0.1-RC - 2016-11-01
+- fixed issues found by validation team
+- updated requirements (based on needed events)
+
 ## 1.0.0-RC - 2016-06-05
 
 - changed image type detection to mimetype
@@ -12,6 +18,6 @@
 - added Camera Manufacturer
 - added credits
 
-## 1.0.0 - 2016-05-28
+## 1.0.0-beta1 - 2016-05-28
 
 - First release
