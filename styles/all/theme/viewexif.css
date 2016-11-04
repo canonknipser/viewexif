@@ -16,12 +16,15 @@ div.ck_ve_table {
 }
 
 div.ck_ve_tabrow {
+	margin: 1px;
 }
 
 div.ck_ve_tabcell {
 	font-size: 0.90em;
-	line-height: 1.0em;
+	line-height: 1.1em;
 	font-weight: normal;
+	border-width: 1px;
+	margin: 1px;
 }
 
 @media screen and (min-width: 450px ) {
@@ -39,7 +42,7 @@ div.ck_ve_tabcell {
 		display: table-cell; 
 		width: 49%; 
 		font-size: 0.85em;
-		line-height: 1.0em;
+		line-height: 1.1em;
 		font-weight: normal;
 	}
 	div.ck_ve_tabcell:nth-child(2){
