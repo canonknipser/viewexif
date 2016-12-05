@@ -11,8 +11,6 @@ matrix:
       env: DB=mysqli # MyISAM
     - php: 5.4
       env: DB=mysqli
-<<<<<<< HEAD
-=======
     - php: 5.4
       env: DB=mysqli
     - php: 5.4
@@ -23,7 +21,6 @@ matrix:
       env: DB=postgres
     - php: 5.4
       env: DB=sqlite3
->>>>>>> refs/remotes/origin/master
     - php: 5.5
       env: DB=mysqli
     - php: 5.6
