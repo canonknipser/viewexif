@@ -196,7 +196,7 @@ public function get_exif_data($event)
 			}
 			else
 			{
-				$exif_make = $exif["IFD0"]["Make"];
+				$exif_make = "".$exif["IFD0"]["Make"];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MAKE'],
@@ -212,7 +212,7 @@ public function get_exif_data($event)
 			}
 			else
 			{
-				$exif_model = $exif["IFD0"]["Model"];
+				$exif_model = "".$exif["IFD0"]["Model"];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MODEL'],
@@ -238,7 +238,7 @@ public function get_exif_data($event)
 			}
 			else
 			{
-				$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
+				$exif_exposure_bias = "".$exif["EXIF"]["ExposureBiasValue"];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS'],
