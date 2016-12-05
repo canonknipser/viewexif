@@ -2,6 +2,9 @@
 
 (newest entries on top)
 
+## 1.0.2-RC - 2016-12-05
+- fixed issue #8 [Wrong ISO speed rating from Samsung Mobile](https://github.com/canonknipser/viewexif/issues/8)
+
 ## 1.0.1-RC - 2016-11-01
 - fixed issues found by validation team
 - updated requirements (based on needed events)

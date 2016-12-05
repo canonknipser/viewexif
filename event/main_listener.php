@@ -160,9 +160,14 @@ public function get_exif_data($event)
 		}
 		if (isset($exif["EXIF"]["ISOSpeedRatings"]))
 		{
+			// Issue no. 8
+			// Samsung Mobile phones seems to use a array for ISOSpeedRatings, in that case pick the first array element
+			is_array(($exif["EXIF"]["ISOSpeedRatings"])) ? $exif_iso = $exif["EXIF"]["ISOSpeedRatings"][0] : $exif_iso = $exif["EXIF"]["ISOSpeedRatings"];
+			// make sure we really have a string, ISO value can be given as integer
+			$exif_iso = "".$exif_iso;
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_ISO'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif["EXIF"]["ISOSpeedRatings"]),
+				'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif_iso),
 			);
 		}
 		if (isset($exif["EXIF"]["WhiteBalance"]))
@@ -184,16 +189,34 @@ public function get_exif_data($event)
 		}
 		if (isset($exif["IFD0"]["Make"]))
 		{
+			// make sure we really have a string
+			if (is_string($exif["IFD0"]["Make"]))
+			{
+				$exif_make = $exif["IFD0"]["Make"];
+			}
+			else
+			{
+				$exif_make = $exif["IFD0"]["Make"];
+			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MAKE'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif["IFD0"]["Make"])),
+				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_make)),
 			);
 		}
 		if (isset($exif["IFD0"]["Model"]))
 		{
+			// make sure we really have a string
+			if (is_string($exif["IFD0"]["Model"]))
+			{
+				$exif_model = $exif["IFD0"]["Model"];
+			}
+			else
+			{
+				$exif_model = $exif["IFD0"]["Model"];
+			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MODEL'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif["IFD0"]["Model"])),
+				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_model)),
 			);
 		}
 		if (isset($exif["EXIF"]["ExposureProgram"]))

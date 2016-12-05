@@ -2,7 +2,6 @@ View Exif
 ===========
 viewexif display some exif data for attached images
 
-[![Build Status](https://travis-ci.org/canonknipser/viewexif.svg?branch=master)](https://travis-ci.org/canonknipser/viewexif)
 
 ## Requirements
 * phpBB 3.1.6-RC1 or higher
