@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Viewexif by canonknipser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Viewexif</h1>
+      <h2 class="project-tagline">viewexif displays some exif data for attached images on phpBB-Boards</h2>
+      <a href="https://github.com/canonknipser/viewexif" class="btn">View on GitHub</a>
+      <a href="https://github.com/canonknipser/viewexif/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/canonknipser/viewexif/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="view-exif" class="anchor" href="#view-exif" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>View Exif</h1>
+
+<p>viewexif display some exif data for attached images</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>phpBB 3.1.6-RC1 or higher</li>
+<li>PHP 5.3.3 or higher</li>
+</ul>
+
+<h2>
+<a id="quick-installation" class="anchor" href="#quick-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick Installation</h2>
+
+<p>(Availiable when published in the extensions DB)
+You can quickly install this extension on the latest version of <a href="https://www.phpbb.com/downloads/">phpBB 3.1</a> or on the latest development version of <a href="https://github.com/phpbb/phpbb3">phpBB 3.1-dev</a> by doing the following:</p>
+
+<ol>
+<li>Upload the extension with "<a href="https://github.com/BoardTools/upload">Upload Extensions</a>".</li>
+<li>Check that you have uploaded the correct files.</li>
+<li>Click <code>Enable</code>.</li>
+</ol>
+
+<h2>
+<a id="standard-installation" class="anchor" href="#standard-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Standard Installation</h2>
+
+<p>You can install this extension on the latest version of <a href="https://www.phpbb.com/downloads/">phpBB 3.1</a> or on the latest development version of <a href="https://github.com/phpbb/phpbb3">phpBB 3.1-dev</a> by doing the following:</p>
+
+<ol>
+<li>Download the extension. You can do it by downloading the <a href="http://download.canonknipser.com/canonknipser_viewexif_1_0_1.zip">latest ZIP-archive of 1.0.1 release</a>.</li>
+<li>Check out the existence of the folder <code>/ext/canonknipser/viewexif/</code> in the root of your board folder. Create folders if necessary.</li>
+<li>Copy the contents of the downloaded <code>viewexif</code> folder to <code>/ext/canonknipser/viewexif/</code>.</li>
+<li>Navigate in the ACP to <code>Customise -&gt; Extension Management -&gt; Manage extensions -&gt; Show exif data</code>.</li>
+<li>Click <code>Enable</code>.</li>
+</ol>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="nothing-to-do" class="anchor" href="#nothing-to-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nothing to do</h3>
+
+<p>Simple visit some attached images at your board. It will show use some exif data.
+This extension uses the buildin php exif library, to keep it as simple as possible.
+Currently, following exif data will show up, if present:</p>
+
+<ol>
+<li>DateTimeOriginal (transformed to user's chosen date/time-format)</li>
+<li>Focal length</li>
+<li>Exposure time</li>
+<li>Aperture (f-Stop-Number)</li>
+<li>ISO speed rating</li>
+<li>White balance</li>
+<li>Flash information</li>
+<li>Camera maker and model</li>
+<li>Exposure program</li>
+<li>Exposure bias</li>
+<li>Metering mode</li>
+<li>Link to photo position on google maps</li>
+</ol>
+
+<h2>
+<a id="update" class="anchor" href="#update" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Update</h2>
+
+<ol>
+<li>Download the updated extension (See link above under "Installation").</li>
+<li>Navigate in the ACP to <code>Customise -&gt; Extension Management -&gt; Manage extensions -&gt; Show exif data</code> and click <code>Disable</code>.</li>
+<li>Copy the contents of the downloaded zip file  to <code>/ext/canonknipser/viewexif/</code>.</li>
+<li>Navigate in the ACP to <code>Customise -&gt; Extension Management -&gt; Manage extensions -&gt; Show exif data</code> and click <code>Enable</code>.</li>
+<li>Click <code>Details</code> or <code>Re-Check all versions</code> link to follow updates.</li>
+</ol>
+
+<h2>
+<a id="uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Uninstallation</h2>
+
+<p>Navigate in the ACP to <code>Customise -&gt; Extension Management -&gt; Manage extensions -&gt; Show exif data</code> and click <code>Disable</code>.</p>
+
+<p>For permanent uninstallation click <code>Delete Data</code> and then you can safely delete the <code>/ext/canonknipser/viewexif/</code> folder.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p><a href="http://opensource.org/licenses/GPL-2.0">GNU General Public License v2</a></p>
+
+<p>© 2016 - Frank Jakobs (<a href="https://github.com/canonknipser">https://github.com/canonknipser</a>)</p>
+
+<p>extension based on the 3.0.x-mod <a href="https://www.phpbb.com/community/viewtopic.php?t=1107475">NV Exif Data</a> by <a href="https://www.phpbb.com/community/memberlist.php?mode=viewprofile&amp;u=315319">nickvergessen</a> </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/canonknipser/viewexif">Viewexif</a> is maintained by <a href="https://github.com/canonknipser">canonknipser</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
