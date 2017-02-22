@@ -3,11 +3,12 @@ div.ck_ve_exifblock {
 	margin: 0;
 	overflow-x: auto;
 	overflow: hidden;
-	font-size: 1.1em;
+	font-size: 0.9em;
 	line-height: 1.5em;
 	width: 98%;
 	font-weight: bold;
 	text-align: left;
+	cursor: pointer;
 }
 
 
@@ -30,10 +31,10 @@ div.ck_ve_tabcell {
 @media screen and (min-width: 450px ) {
 
 
-    div.ck_ve_table { 
-      display: none; 
-      border-collapse:collapse; 
-    }
+	div.ck_ve_table { 
+		display: none; 
+		border-collapse:collapse; 
+	}
 
 	div.ck_ve_tabrow {
 		display: table-row; 
