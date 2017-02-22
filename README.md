@@ -1,6 +1,6 @@
 View Exif
 ===========
-viewexif display some exif data for attached images
+viewexif display some exif data for attached images. It will not work for images linked from other sources using the bbCode [img] or for images in signatures, avatars etc.
 
 
 ## Requirements
@@ -10,24 +10,26 @@ viewexif display some exif data for attached images
 
 ## Quick Installation
 (Availiable when published in the extensions DB)
-You can quickly install this extension on the latest version of [phpBB 3.1](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev](https://github.com/phpbb/phpbb3) by doing the following:
+
+You can quickly install this extension on the latest version of [phpBB 3.1 or phpBB 3.2](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev or phpBB 3.2-dev](https://github.com/phpbb/phpbb3) by doing the following:
 
 1. Upload the extension with "[Upload Extensions](https://github.com/BoardTools/upload)".
 2. Check that you have uploaded the correct files.
 3. Click `Enable`.
 
 ## Standard Installation
-You can install this extension on the latest version of [phpBB 3.1](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev](https://github.com/phpbb/phpbb3) by doing the following:
+You can install this extension on the latest version of [phpBB 3.1 or phpBB 3.2](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev or phpBB 3.2-dev](https://github.com/phpbb/phpbb3) by doing the following:
 
-1. Download the extension. You can do it by downloading the [latest ZIP-archive of 1.0.1 release](http://download.canonknipser.com/canonknipser_viewexif_1_0_1.zip).
+1. Download the extension. You can do it by downloading the [latest ZIP-archive of 1.0.3 release](http://download.canonknipser.com/canonknipser_viewexif_1_0_3.zip).
 2. Check out the existence of the folder `/ext/canonknipser/viewexif/` in the root of your board folder. Create folders if necessary.
 3. Copy the contents of the downloaded `viewexif` folder to `/ext/canonknipser/viewexif/`.
 4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data`.
 5. Click `Enable`.
 
 ## Usage
-### Nothing to do
-Simple visit some attached images at your board. It will show use some exif data.
+
+Simple visit some attached images at your board. It will show you exif data, if they are contained in the image.
+
 This extension uses the buildin php exif library, to keep it as simple as possible.
 Currently, following exif data will show up, if present:
 
@@ -45,7 +47,7 @@ Currently, following exif data will show up, if present:
 12. Link to photo position on google maps
 
 
-## Update
+## Update from previous versions
 1. Download the updated extension (See link above under "Installation").
 2. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Disable`.
 3. Copy the contents of the downloaded zip file  to `/ext/canonknipser/viewexif/`.
@@ -60,6 +62,8 @@ For permanent uninstallation click `Delete Data` and then you can safely delete 
 ## License
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
-© 2016 - Frank Jakobs (https://github.com/canonknipser)
+If you like this extension, feel free to [donate my work](https://www.paypal.me/FJakobs2105)
+
+© 2016-2017 - Frank Jakobs [My account at github](https://github.com/canonknipser)
 
 extension based on the 3.0.x-mod [NV Exif Data](https://www.phpbb.com/community/viewtopic.php?t=1107475) by [nickvergessen](https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=315319) 

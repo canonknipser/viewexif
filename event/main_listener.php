@@ -23,7 +23,7 @@ class main_listener implements EventSubscriberInterface
 static public function getSubscribedEvents()
 {
 	return array(
-		'core.parse_attachments_modify_template_data'	=> 'get_exif_data',
+		'core.parse_attachments_modify_template_data'	=> 'ck_ve_get_exif_data',
 	);
 }
 
@@ -57,9 +57,9 @@ public function __construct(\phpbb\controller\helper $helper, \phpbb\template\te
 }
 
 
-public function get_exif_data($event)
+public function ck_ve_get_exif_data($event)
 {
-	$attachment = $event['attachment'];
+	$attachment  = $event['attachment'];
 	$block_array = $event['block_array']; // Template data of the attachment
 
 	// validation issue: load language file only when needed
@@ -262,21 +262,19 @@ public function get_exif_data($event)
 			// we have GPS data, extract the numeric values for degree, minute, second
 			$lat = $exif['GPS']['GPSLatitude'];
 
+			//issue #12: try to fix incorrect coordinates
 			list($num, $dec) = explode('/', $lat[0]);
-			$lat_s = $num / $dec;
+			$lat_s = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lat[1]);
-			$lat_m = $num / $dec;
+			$lat_m = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lat[2]);
-			if ($dec != 0)
-			{
-				$lat_v = $num / $dec;
-			}
+			$lat_v = $this->ck_ve_calc_array($num, $dec);
 			// calculate decimal value for latidude, eg for google maps
 			$lat_dec = $lat_s + ($lat_m / 60.0) + ($lat_v / 3600.0);
 
-					$lat_ref = $exif['GPS']['GPSLatitudeRef'];
+			$lat_ref = $exif['GPS']['GPSLatitudeRef'];
 			if ($lat_ref == 'S')
 			{
 				$lat_prefix = 'S';
@@ -289,16 +287,13 @@ public function get_exif_data($event)
 			$lon = $exif['GPS']['GPSLongitude'];
 
 			list($num, $dec) = explode('/', $lon[0]);
-			$lon_s = $num / $dec;
+			$lon_s = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lon[1]);
-			$lon_m = $num / $dec;
+			$lon_m = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lon[2]);
-			if ($dec != 0)
-			{
-				$lon_v = $num / $dec;
-			}
+			$lon_v = $this->ck_ve_calc_array($num, $dec);
 
 			// calculate decimal value for latidude, eg for google maps
 			$lon_dec = $lon_s  + ($lon_m / 60.0) + ($lon_v / 3600.0);
@@ -312,6 +307,56 @@ public function get_exif_data($event)
 			{
 				$lon_prefix = 'W';
 			}
+
+/*
+			// show nice debugging in the template, no "echo"
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLatitude pref',
+				'CK_VE_EXIF_VALUE'	=>$lat_prefix,
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 0',
+				'CK_VE_EXIF_VALUE'	=>$lat[0],
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 1',
+				'CK_VE_EXIF_VALUE'	=>$lat[1],
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 2',
+				'CK_VE_EXIF_VALUE'	=>$lat[2],
+			);
+			if (isset($lat[3]))
+			{
+				$exif_data[] = array(
+					'CK_VE_EXIF_NAME'	=> 'GPSLatitude 3',
+					'CK_VE_EXIF_VALUE'	=>$lat[3],
+				);
+			}
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLongitude pref',
+				'CK_VE_EXIF_VALUE'	=>$lon_prefix,
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 0',
+				'CK_VE_EXIF_VALUE'	=>$lon[0],
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 1',
+				'CK_VE_EXIF_VALUE'	=>$lon[1],
+			);
+			$exif_data[] = array(
+				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 2',
+				'CK_VE_EXIF_VALUE'	=>$lon[2],
+			);
+			if (isset($lon[3]))
+			{
+				$exif_data[] = array(
+					'CK_VE_EXIF_NAME'	=> 'GPSLongitude 3',
+					'CK_VE_EXIF_VALUE'	=>$lon[3],
+				);
+			}
+*/
 
 			if ($use_google)
 			{
@@ -336,6 +381,27 @@ public function get_exif_data($event)
 		$event['block_array'] = $block_array;
 
 	}
+
+}
+
+
+
+private function ck_ve_calc_array($v1 = 0, $v2 = 0)
+{
+	// sanitize vars
+	$r1 = 0;
+	$v1 = 0 + $v1;
+	$v2 = 0 + $v2;
+	// no division by zero
+	if ($v2 == 0)
+	{
+		$r1 = $v1;
+	}
+	else
+	{
+		$r1 = $v1 / $v2;
+	}
+	return $r1;
 
 }
 

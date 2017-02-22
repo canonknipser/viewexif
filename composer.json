@@ -1,10 +1,10 @@
 {
     "name": "canonknipser/viewexif",
     "type": "phpbb-extension",
-    "description": "Show exif-data for images posted as attachment for phpBB 3.1",
+    "description": "Show exif-data for images posted as attachment for phpBB 3.1 and 3.2",
     "homepage": "https://canonknipser.com",
-    "version": "1.0.2",
-    "time": "2016-11-04",
+    "version": "1.0.3",
+    "time": "2017-02-22",
     "license": "GPL-2.0",
     "authors": [{
             "name": "canonknipser",
