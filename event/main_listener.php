@@ -159,7 +159,6 @@ public function ck_ve_get_exif_data($event)
 			$date_time_UTC = new \DateTime("@$timestamp", $date_time_zone_UTC);
 
 			// Calculate the UTC offset for the date/time contained in the $date_time_zone_user (given in seconds)
-
 			$time_offset = $date_time_zone_user->getOffset($date_time_UTC);
 
 			$exif_data[] = array(
@@ -386,31 +385,31 @@ public function ck_ve_get_exif_data($event)
 				$lang_mapservice = $this->user->lang['CK_VE_'.strtoupper($mapservice)];
 				switch ($mapservice)
 				{
-				case 'osm':
-					$targeturl  = 'https://www.openstreetmap.org/?';
-					$targeturl .= '&mlat='.$lat_prefix_plus.$lat_dec;
-					$targeturl .= '&mlon='.$lon_prefix_plus.$lon_dec;
-					$targeturl .= '#map=17';
-					$targeturl .= '/'.$lat_prefix_plus.$lat_dec;
-					$targeturl .= '/'.$lon_prefix_plus.$lon_dec;
-					$targeturl .= '&layers=M';
-					break;
-				case 'googlemaps':
-				default:
+					case 'osm':
+						$targeturl  = 'https://www.openstreetmap.org/?';
+						$targeturl .= '&mlat='.$lat_prefix_plus.$lat_dec;
+						$targeturl .= '&mlon='.$lon_prefix_plus.$lon_dec;
+						$targeturl .= '#map=17';
+						$targeturl .= '/'.$lat_prefix_plus.$lat_dec;
+						$targeturl .= '/'.$lon_prefix_plus.$lon_dec;
+						$targeturl .= '&layers=M';
+						break;
+					case 'googlemaps':
+					default:
 
-					$targeturl  = 'https://maps.google.com/maps?';
-					$targeturl .= 'q=';
-					$targeturl .= $lat_prefix_letter.$lat_dec;
-					$targeturl .= ',';
-					$targeturl .= $lon_prefix_letter.$lon_dec;
-					$targeturl .= '&z=17';
-					break;
-				}
-				$targetlink = '<a href="'.$targeturl.'" target="CK_VE_MAP">'.$this->user->lang['CK_VE_CLICK_HERE'].'</a>';
-				$exif_data[] = array(
-					'CK_VE_EXIF_NAME'	=>$lang_mapservice,
-					'CK_VE_EXIF_VALUE'	=>$targetlink,
-				);
+						$targeturl  = 'https://maps.google.com/maps?';
+						$targeturl .= 'q=';
+						$targeturl .= $lat_prefix_letter.$lat_dec;
+						$targeturl .= ',';
+						$targeturl .= $lon_prefix_letter.$lon_dec;
+						$targeturl .= '&z=17';
+						break;
+					}
+					$targetlink = '<a href="'.$targeturl.'" target="CK_VE_MAP">'.$this->user->lang['CK_VE_CLICK_HERE'].'</a>';
+					$exif_data[] = array(
+						'CK_VE_EXIF_NAME'	=>$lang_mapservice,
+						'CK_VE_EXIF_VALUE'	=>$targetlink,
+					);
 			}
 		}
 
