@@ -115,16 +115,16 @@ public function ck_ve_get_exif_data($event)
 	// we use mimetype here - and support tiff
 	$exif = ((($attachment['mimetype'] == 'image/jpeg') || ($attachment['mimetype'] == 'image/tiff'))) ? @exif_read_data($filename, "EXIF, IFD0, GPS", true) : array();
 
-	if (($active_exif) && (!empty($exif["EXIF"]) || !empty($exif["GPS"]) || !empty($exif["IFD0"])))
+	if (($active_exif) && (!empty($exif['EXIF']) || !empty($exif['GPS']) || !empty($exif['IFD0'])))
 	{
 
 		// exif display is active and we got some data in the relevant metadata sections
-		if (isset($exif["EXIF"]["DateTimeOriginal"]) && $this->config['ck_ve_allow_date'])
+		if (isset($exif['EXIF']['DateTimeOriginal']) && $this->config['ck_ve_allow_date'])
 		{
 			// display also the original value of date/time
 			$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_DATE_ORIG'],
-					'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif["EXIF"]["DateTimeOriginal"]),
+					'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif['EXIF']['DateTimeOriginal']),
 			);
 
 			if ($this->user->data['user_id'] == ANONYMOUS)
@@ -143,12 +143,12 @@ public function ck_ve_get_exif_data($event)
 			}
 			// The standard EXIF date/time format is "YYYY:mm:dd HH:MM:SS",
 			// make sure it is read in that format
-			$timestamp_year   = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
-			$timestamp_month  = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
-			$timestamp_day    = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
-			$timestamp_hour   = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
-			$timestamp_minute = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
-			$timestamp_second = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
+			$timestamp_year   = 0 + substr($exif['EXIF']['DateTimeOriginal'], 0, 4);
+			$timestamp_month  = 0 + substr($exif['EXIF']['DateTimeOriginal'], 5, 2);
+			$timestamp_day    = 0 + substr($exif['EXIF']['DateTimeOriginal'], 8, 2);
+			$timestamp_hour   = 0 + substr($exif['EXIF']['DateTimeOriginal'], 11, 2);
+			$timestamp_minute = 0 + substr($exif['EXIF']['DateTimeOriginal'], 14, 2);
+			$timestamp_second = 0 + substr($exif['EXIF']['DateTimeOriginal'], 17, 2);
 			// user dependend formatting
 			$timestamp        = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
 			// we need to respect the timezone from user's profile, so we need to calculate the diff between user timezone and UTC
@@ -167,18 +167,18 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["EXIF"]["FocalLength"]) && $this->config['ck_ve_allow_focal_length'])
+		if (isset($exif['EXIF']['FocalLength']) && $this->config['ck_ve_allow_focal_length'])
 		{
-			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
+			list($num, $den) = explode("/", $exif['EXIF']['FocalLength']);
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_FOCAL'],
 				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($num/$den)),
 			);
 		}
 
-		if (isset($exif["EXIF"]["ExposureTime"]) && $this->config['ck_ve_allow_exposure_time'])
+		if (isset($exif['EXIF']['ExposureTime']) && $this->config['ck_ve_allow_exposure_time'])
 		{
-			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
+			list($num, $den) = explode("/", $exif['EXIF']['ExposureTime']);
 			if ($num > $den)
 			{
 				$exif_exposure = $num/$den;
@@ -193,9 +193,9 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["EXIF"]["FNumber"]) && $this->config['ck_ve_allow_f_number'])
+		if (isset($exif['EXIF']['FNumber']) && $this->config['ck_ve_allow_f_number'])
 		{
-			list($num, $den) = explode("/", $exif["EXIF"]["FNumber"]);
+			list($num, $den) = explode("/", $exif['EXIF']['FNumber']);
 			if ($den > 0)
 			{
 				$exif_data[] = array(
@@ -212,11 +212,11 @@ public function ck_ve_get_exif_data($event)
 			}
 		}
 
-		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && $this->config['ck_ve_allow_iso'])
+		if (isset($exif['EXIF']['ISOSpeedRatings']) && $this->config['ck_ve_allow_iso'])
 		{
 			// Issue no. 8
 			// Samsung Mobile phones seems to use a array for ISOSpeedRatings, in that case pick the first array element
-			is_array(($exif["EXIF"]["ISOSpeedRatings"])) ? $exif_iso = $exif["EXIF"]["ISOSpeedRatings"][0] : $exif_iso = $exif["EXIF"]["ISOSpeedRatings"];
+			is_array(($exif['EXIF']['ISOSpeedRatings'])) ? $exif_iso = $exif['EXIF']['ISOSpeedRatings'][0] : $exif_iso = $exif['EXIF']['ISOSpeedRatings'];
 			// make sure we really have a string, ISO value can be given as integer
 			$exif_iso = "".$exif_iso;
 			$exif_data[] = array(
@@ -225,35 +225,35 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["EXIF"]["WhiteBalance"]) && $this->config['ck_ve_allow_wb'])
+		if (isset($exif['EXIF']['WhiteBalance']) && $this->config['ck_ve_allow_wb'])
 		{
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_WHITEB'],
-				'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')],
+				'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_WHITEB_' . (($exif['EXIF']['WhiteBalance']) ? 'MANU' : 'AUTO')],
 			);
 		}
 
-		if (isset($exif["EXIF"]["Flash"]) && $this->config['ck_ve_allow_flash'])
+		if (isset($exif['EXIF']['Flash']) && $this->config['ck_ve_allow_flash'])
 		{
-			if (isset($this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif['EXIF']['Flash']]))
 			{
 				$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_FLASH'],
-					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]],
+					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif['EXIF']['Flash']],
 				);
 			}
 		}
 
-		if (isset($exif["IFD0"]["Make"]) && $this->config['ck_ve_allow_make'])
+		if (isset($exif['IFD0']['Make']) && $this->config['ck_ve_allow_make'])
 		{
 			// make sure we really have a string
-			if (is_string($exif["IFD0"]["Make"]))
+			if (is_string($exif['IFD0']['Make']))
 			{
-				$exif_make = $exif["IFD0"]["Make"];
+				$exif_make = $exif['IFD0']['Make'];
 			}
 			else
 			{
-				$exif_make = "".$exif["IFD0"]["Make"];
+				$exif_make = "".$exif['IFD0']['Make'];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MAKE'],
@@ -261,16 +261,16 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["IFD0"]["Model"]) && $this->config['ck_ve_allow_model'])
+		if (isset($exif['IFD0']['Model']) && $this->config['ck_ve_allow_model'])
 		{
 			// make sure we really have a string
-			if (is_string($exif["IFD0"]["Model"]))
+			if (is_string($exif['IFD0']['Model']))
 			{
-				$exif_model = $exif["IFD0"]["Model"];
+				$exif_model = $exif['IFD0']['Model'];
 			}
 			else
 			{
-				$exif_model = "".$exif["IFD0"]["Model"];
+				$exif_model = "".$exif['IFD0']['Model'];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MODEL'],
@@ -278,27 +278,27 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["EXIF"]["ExposureProgram"]) && $this->config['ck_ve_allow_exposure_prog'])
+		if (isset($exif['EXIF']['ExposureProgram']) && $this->config['ck_ve_allow_exposure_prog'])
 		{
-			if (isset($this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif['EXIF']['ExposureProgram']]))
 			{
 				$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_PROG'],
-					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]],
+					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif['EXIF']['ExposureProgram']],
 				);
 			}
 		}
 
-		if (isset($exif["EXIF"]["ExposureBiasValue"]) && $this->config['ck_ve_allow_exposure_bias'])
+		if (isset($exif['EXIF']['ExposureBiasValue']) && $this->config['ck_ve_allow_exposure_bias'])
 		{
-			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
+			list($num,$den) = explode("/",$exif['EXIF']['ExposureBiasValue']);
 			if (($num/$den) == 0)
 			{
 				$exif_exposure_bias = 0;
 			}
 			else
 			{
-				$exif_exposure_bias = "".$exif["EXIF"]["ExposureBiasValue"];
+				$exif_exposure_bias = "".$exif['EXIF']['ExposureBiasValue'];
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS'],
@@ -307,13 +307,13 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-		if (isset($exif["EXIF"]["MeteringMode"]) && $this->config['ck_ve_allow_metering'])
+		if (isset($exif['EXIF']['MeteringMode']) && $this->config['ck_ve_allow_metering'])
 		{
-			if (isset($this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
+			if (isset($this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif['EXIF']['MeteringMode']]))
 			{
 				$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_METERING_MODE'],
-					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]
+					'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif['EXIF']['MeteringMode']]
 				);
 			}
 		}
