@@ -89,17 +89,17 @@ public function ck_ve_get_exif_data($event)
 	{
 		//check, if forum setting allows display of exif data
 		$sql = 'SELECT ck_ve_show FROM ' . FORUMS_TABLE .
-			' WHERE forum_id = ' . (int)$forum_id;
+			' WHERE forum_id = ' . (int) $forum_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 		if ($row['ck_ve_show'] == 0)
 		{
-			$active_exif = FALSE;
+			$active_exif = false;
 		}
 		else
 		{
-			$active_exif = TRUE;
+			$active_exif = true;
 		}
 	}
 	// validation issue: load language file only when needed
@@ -168,7 +168,6 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-
 		if (isset($exif["EXIF"]["FocalLength"]) && $this->config['ck_ve_allow_focal_length'])
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
@@ -177,7 +176,6 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($num/$den)),
 			);
 		}
-
 
 		if (isset($exif["EXIF"]["ExposureTime"]) && $this->config['ck_ve_allow_exposure_time'])
 		{
@@ -195,7 +193,6 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_EXP'], $exif_exposure),
 			);
 		}
-
 
 		if (isset($exif["EXIF"]["FNumber"]) && $this->config['ck_ve_allow_f_number'])
 		{
@@ -216,7 +213,6 @@ public function ck_ve_get_exif_data($event)
 			}
 		}
 
-
 		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && $this->config['ck_ve_allow_iso'])
 		{
 			// Issue no. 8
@@ -230,7 +226,6 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-
 		if (isset($exif["EXIF"]["WhiteBalance"]) && $this->config['ck_ve_allow_wb'])
 		{
 			$exif_data[] = array(
@@ -238,7 +233,6 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')],
 			);
 		}
-
 
 		if (isset($exif["EXIF"]["Flash"]) && $this->config['ck_ve_allow_flash'])
 		{
@@ -250,7 +244,6 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-
 
 		if (isset($exif["IFD0"]["Make"]) && $this->config['ck_ve_allow_make'])
 		{
@@ -269,7 +262,6 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-
 		if (isset($exif["IFD0"]["Model"]) && $this->config['ck_ve_allow_model'])
 		{
 			// make sure we really have a string
@@ -287,7 +279,6 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-
 		if (isset($exif["EXIF"]["ExposureProgram"]) && $this->config['ck_ve_allow_exposure_prog'])
 		{
 			if (isset($this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
@@ -298,7 +289,6 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-
 
 		if (isset($exif["EXIF"]["ExposureBiasValue"]) && $this->config['ck_ve_allow_exposure_bias'])
 		{
@@ -318,7 +308,6 @@ public function ck_ve_get_exif_data($event)
 			);
 		}
 
-
 		if (isset($exif["EXIF"]["MeteringMode"]) && $this->config['ck_ve_allow_metering'])
 		{
 			if (isset($this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
@@ -329,7 +318,6 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-
 
 		if (isset($exif['GPS']['GPSLatitude']) && $this->config['ck_ve_allow_gps'])
 		{
@@ -396,7 +384,8 @@ public function ck_ve_get_exif_data($event)
 			{
 				$mapservice = $this->user->data['ck_ve_mapservice'];
 				$lang_mapservice = $this->user->lang['CK_VE_'.strtoupper($mapservice)];
-				switch ($mapservice) {
+				switch ($mapservice)
+				{
 				case 'osm':
 					$targeturl  = 'https://www.openstreetmap.org/?';
 					$targeturl .= '&mlat='.$lat_prefix_plus.$lat_dec;

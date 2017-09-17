@@ -28,10 +28,10 @@ class schema_1_1_0 extends \phpbb\db\migration\migration
 			'add_columns'	=> array(
 				$this->table_prefix . 'users'			=> array(
 					'ck_ve_mapservice'					=> array('VCHAR:255', 'googlemaps'),
-					'ck_ve_active'						=> array('BOOL', TRUE),
+					'ck_ve_active'						=> array('BOOL', true),
 				),
 				$this->table_prefix . 'forums'			=> array(
-					'ck_ve_show'						=> array('BOOL', TRUE),
+					'ck_ve_show'						=> array('BOOL', true),
 				),
 			),
 		);
