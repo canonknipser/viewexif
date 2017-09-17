@@ -5,19 +5,19 @@ sudo: required
 
 matrix:
   include:
-     - php: 5.5
-       env: DB=none;NOTESTS=1
-     - php: 5.4
-       env: DB=mysqli #myisam
-     - php: 7.1
-       env: DB=mysqli
-     - php: nightly
-       env: DB=mysqli
-     - php: hhvm
-       env: DB=mysqli
-   allow_failures:
-     - php: nightly
-     - php: hhvm
+    - php: 5.5
+      env: DB=none;NOTESTS=1
+    - php: 5.4
+      env: DB=mysqli #myisam
+    - php: 7.1
+      env: DB=mysqli
+    - php: nightly
+      env: DB=mysqli
+    - php: hhvm
+      env: DB=mysqli
+  allow_failures:
+    - php: nightly
+    - php: hhvm
   fast_finish: true
 
 env:
