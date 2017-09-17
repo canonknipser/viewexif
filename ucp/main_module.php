@@ -42,7 +42,7 @@ class main_module
 
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET ' . $db->sql_build_array('UPDATE', $data) . '
-				WHERE user_id = ' . $user->data['user_id'];
+				WHERE user_id = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
 
 			meta_refresh(3, $this->u_action);

@@ -1,4 +1,5 @@
 sudo: required
+dist: trusty
 
 language: php
 
@@ -10,8 +11,6 @@ matrix:
       env: DB=mysqli #myisam
     - php: 5.4
       env: DB=mysql
-    - php: 5.5
-      env: DB=mariadb
     - php: 5.4
       env: DB=postgres
     - php: 5.4
