@@ -2,16 +2,17 @@
 /**
  *
  * This file is part of the viewexif extension for phpBB.
- *
- * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @package View Exif
+ * @copyright (c) 2017 Frank Jakobs (canonknipser)
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
- * For full copyright and license information, please see
- * the docs/CREDITS.txt file.
  *
  */
 
 namespace canonknipser\viewexif;
+
+/**
+* Extension class for custom enable/disable/purge actions
+*/
 
 class ext extends \phpbb\extension\base
 {
@@ -23,12 +24,24 @@ class ext extends \phpbb\extension\base
 		if ($return_value)
 		{
 			$return_value = function_exists('exif_read_data');
+			if (!$return_value)
+			{
+				$user = $this->container->get('user');
+				$user->add_lang_ext('canonknipser/viewexif', 'viewexif_acp');
+				trigger_error($user->lang('CK_VE_REQUIRE_EXIF'), E_USER_WARNING);
+			}
 		}
 		// second test: phpBB version greater equal 3.1.6?
 		if ($return_value)
 		{
 			$config =$this->container->get('config');
 			$return_value = phpbb_version_compare($config['version'], '3.1.6', '>=');
+			if (!$return_value)
+			{
+				$user = $this->container->get('user');
+				$user->add_lang_ext('canonknipser/viewexif', 'viewexif_acp');
+				trigger_error($user->lang('CK_VE_REQUIRE_316'), E_USER_WARNING);
+			}
 		}
 
 		return($return_value);

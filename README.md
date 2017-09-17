@@ -17,14 +17,16 @@ You can quickly install this extension on the latest version of [phpBB 3.1 or ph
 2. Check that you have uploaded the correct files.
 3. Click `Enable`.
 
+
 ## Standard Installation
 You can install this extension on the latest version of [phpBB 3.1 or phpBB 3.2](https://www.phpbb.com/downloads/) or on the latest development version of [phpBB 3.1-dev or phpBB 3.2-dev](https://github.com/phpbb/phpbb3) by doing the following:
 
-1. Download the extension. You can do it by downloading the [latest ZIP-archive of 1.0.3 release](http://download.canonknipser.com/canonknipser_viewexif_1_0_3.zip).
+1. Download the extension. You can do it by downloading the [latest ZIP-archive of 1.1.0 release](http://download.canonknipser.com/canonknipser_viewexif_1_1_0.zip).
 2. Check out the existence of the folder `/ext/canonknipser/viewexif/` in the root of your board folder. Create folders if necessary.
 3. Copy the contents of the downloaded `viewexif` folder to `/ext/canonknipser/viewexif/`.
 4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data`.
 5. Click `Enable`.
+
 
 ## Usage
 
@@ -44,7 +46,31 @@ Currently, following exif data will show up, if present:
 9. Exposure program
 10. Exposure bias
 11. Metering mode
-12. Link to photo position on google maps
+12. Link to photo position opening a map service. The user can choose between "Google Maps" and "Open Street Maps"
+
+
+### Configuration
+
+
+#### global configuration
+
+Adminstrators find a new module in the extensions tab of the acp. Here you can configure main features of the extension:
+
+- global enable / disable the display of exif data
+- global enable / disable the use of map services
+- global enable / disable a individual choice of exif data
+
+
+#### per forum configuration
+
+enable / disable display of exif data per forum
+
+
+#### user configuration
+
+users can
+- choose to disable the exif data view
+- choose their preferred map service for gps data (currenty they can coose between "Google Maps" and "Open Street Maps") 
 
 
 ## Update from previous versions
@@ -54,10 +80,12 @@ Currently, following exif data will show up, if present:
 4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Enable`.
 5. Click `Details` or `Re-Check all versions` link to follow updates.
 
+
 ## Uninstallation
 Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Show exif data` and click `Disable`.
 
 For permanent uninstallation click `Delete Data` and then you can safely delete the `/ext/canonknipser/viewexif/` folder.
+
 
 ## License
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)

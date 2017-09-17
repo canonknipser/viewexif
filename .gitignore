@@ -2,3 +2,4 @@
 /.project
 /.directory
 phpunit.xml.dist
+/composer.phar

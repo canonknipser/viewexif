@@ -5,7 +5,10 @@ services:
             - '@controller.helper'
             - '@template'
             - '@config'
-            -  %core.root_path%
+            - '%core.root_path%'
             - '@user'
+            - '@request'
+            - '@dbal.conn'
         tags:
             - { name: event.listener }
+

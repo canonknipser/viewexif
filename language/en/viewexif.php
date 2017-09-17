@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * This file is part of the phpBB Forum Software package.
- *
- * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * This file is part of the viewexif extension for phpBB.
+ * @package View Exif
+ * @copyright (c) 2017, canonknipser
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  * For full copyright and license information, please see
@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'CK_VE_EXIF_CAPTION'				=> 'EXIF-Data',
+	'CK_VE_EXIF_CAPTION'			=> 'EXIF-Data',
 	'CK_VE_EXIF_APERTURE'			=> 'F-number',
 	'CK_VE_EXIF_CAM_MODEL'			=> 'Camera-model',
 	'CK_VE_EXIF_CAM_MAKE'			=> 'Camera-manufacturer',
@@ -95,6 +95,13 @@ $lang = array_merge($lang, array(
 	'CK_VE_EXIF_WHITEB_MANU'		=> 'Manual',
 
 	'CK_VE_SHOW_EXIF'				=> 'show/hide',
-	'CK_VE_CLICK_HERE'				=> 'Click here',
-	'CK_VE_NAME_MAPSERVICE'			=> 'Google Maps'
+	// 1.1.0: wording changed
+	'CK_VE_CLICK_HERE'				=> 'Click here to open map',
+	'CK_VE_NAME_MAPSERVICE'			=> 'Google Maps',
+
+	// 1.1.0 new language variables
+	'CK_VE_COORDINATES'				=>	'Coordinates',
+	'CK_VE_GOOGLEMAPS'				=>	'Google Maps',
+	'CK_VE_OSM'						=>	'Open Street Maps',
+	'CK_VE_EXIF_DATE_ORIG'			=>	'Original image recording time',
 ));

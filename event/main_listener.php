@@ -24,6 +24,9 @@ static public function getSubscribedEvents()
 {
 	return array(
 		'core.parse_attachments_modify_template_data'	=> 'ck_ve_get_exif_data',
+		'core.acp_manage_forums_initialise_data'		=> 'ck_ve_acp_manage_forums_init',
+		'core.acp_manage_forums_display_form'			=> 'ck_ve_acp_manage_forums_form',
+		'core.acp_manage_forums_request_data'			=> 'ck_ve_acp_manage_forums_data',
 	);
 }
 
@@ -36,50 +39,97 @@ protected $template;
 /* @var \phpbb\user */
 protected $user;
 
+/** @var \phpbb\request\request */
+protected $request;
+
+/** @var \phpbb\db\driver\driver */
+protected $db;
+
 /**
 	* Constructor
 	*
-	* @param \phpbb\controller\helper $helper
-	* @param \phpbb\template\template $template
-	* @param \phpbb\config	$config		Config object
-	* @param string			$root_path	phpBB root path
-	* @param \phpbb\user	$user		user object
+	* @param \phpbb\controller\helper			$helper
+	* @param \phpbb\template\template			$template
+	* @param \phpbb\config\config				$config		Config object
+	* @param string								$root_path	phpBB root path
+	* @param \phpbb\user						$user		user object
+	* @param \phpbb\request\request				$request
+	* @param \phpbb\db\driver\driver_interface	$db
 
  */
-public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $root_path, \phpbb\user $user)
+public function __construct(\phpbb\controller\helper $helper,
+		\phpbb\template\template $template,
+		\phpbb\config\config $config,
+		$root_path,
+		\phpbb\user $user,
+		\phpbb\request\request $request,
+		\phpbb\db\driver\driver_interface $db
+		)
 {
-	$this->helper = $helper;
-	$this->template = $template;
-	$this->config = $config;
-	$this->root_path = $root_path;
-	$this->user = $user;
+	$this->helper		= $helper;
+	$this->template		= $template;
+	$this->config		= $config;
+	$this->root_path	= $root_path;
+	$this->user			= $user;
+	$this->request		= $request;
+	$this->db			= $db;
 
 }
 
 
 public function ck_ve_get_exif_data($event)
 {
-	$attachment  = $event['attachment'];
-	$block_array = $event['block_array']; // Template data of the attachment
+	$attachment		= $event['attachment'];
+	$block_array	= $event['block_array'];	// Template data of the attachment
+	$forum_id		= $event['forum_id']; 		// forum ID of the attachment
 
+	$active_global = $this->config['ck_ve_active_global'] && $this->user->data['ck_ve_active'];
+	// exif data is enabled globally and user has it als enabled, check, if forum allows exif display
+	if ($active_global && $forum_id)
+	{
+		//check, if forum setting allows display of exif data
+		$sql = 'SELECT ck_ve_show FROM ' . FORUMS_TABLE .
+			' WHERE forum_id = ' . (int)$forum_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if ($row['ck_ve_show'] == 0)
+		{
+			$active_exif = FALSE;
+		}
+		else
+		{
+			$active_exif = TRUE;
+		}
+	}
 	// validation issue: load language file only when needed
+	// FIXME: add_lang_ext is deprecated in 3.2, replaced in 3.3
 	$this->user->add_lang_ext('canonknipser/viewexif', 'viewexif');
 
 	// we need the complete physical_filename for reading exif-data:
 	$filename = $this->root_path . $this->config['upload_path'] . '/' . utf8_basename($attachment['physical_filename']);
 
-	$use_google = true;
+	$active_global = $this->config['ck_ve_active_global'] && $this->user->data['ck_ve_active'];
+	$use_mapservice = $this->config['ck_ve_use_maps'];
 
 	// we use mimetype here - and support tiff
 	$exif = ((($attachment['mimetype'] == 'image/jpeg') || ($attachment['mimetype'] == 'image/tiff'))) ? @exif_read_data($filename, "EXIF, IFD0, GPS", true) : array();
-	$exif_data = array();
-	if (!empty($exif["EXIF"]) || !empty($exif["GPS"]) || !empty($exif["IFD0"]))
+
+	if (($active_exif) && (!empty($exif["EXIF"]) || !empty($exif["GPS"]) || !empty($exif["IFD0"])))
 	{
-		// We got some data
-		if (isset($exif["EXIF"]["DateTimeOriginal"]))
+
+		// exif display is active and we got some data in the relevant metadata sections
+		if (isset($exif["EXIF"]["DateTimeOriginal"]) && $this->config['ck_ve_allow_date'])
 		{
+			// display also the original value of date/time
+			$exif_data[] = array(
+					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_DATE_ORIG'],
+					'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif["EXIF"]["DateTimeOriginal"]),
+			);
+
 			if ($this->user->data['user_id'] == ANONYMOUS)
 			{
+				// guest account has no timezone data, we need to fetch the board's timezone
 				$user_timezone = $this->config['board_timezone'];
 			}
 			else
@@ -91,7 +141,8 @@ public function ck_ve_get_exif_data($event)
 				// overwrite empty timezone value
 				$user_timezone = "UTC";
 			}
-			//  The standard EXIF date/time format is "YYYY:mm:dd HH:MM:SS", make sure it is read in that format
+			// The standard EXIF date/time format is "YYYY:mm:dd HH:MM:SS",
+			// make sure it is read in that format
 			$timestamp_year   = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
 			$timestamp_month  = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
 			$timestamp_day    = 0 + substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
@@ -116,7 +167,9 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> $this->user->format_date($timestamp - $time_offset, false, true),
 			);
 		}
-		if (isset($exif["EXIF"]["FocalLength"]))
+
+
+		if (isset($exif["EXIF"]["FocalLength"]) && $this->config['ck_ve_allow_focal_length'])
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
 			$exif_data[] = array(
@@ -124,7 +177,9 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($num/$den)),
 			);
 		}
-		if (isset($exif["EXIF"]["ExposureTime"]))
+
+
+		if (isset($exif["EXIF"]["ExposureTime"]) && $this->config['ck_ve_allow_exposure_time'])
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
 			if ($num > $den)
@@ -140,7 +195,9 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_EXP'], $exif_exposure),
 			);
 		}
-		if (isset($exif["EXIF"]["FNumber"]))
+
+
+		if (isset($exif["EXIF"]["FNumber"]) && $this->config['ck_ve_allow_f_number'])
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FNumber"]);
 			if ($den > 0)
@@ -158,7 +215,9 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-		if (isset($exif["EXIF"]["ISOSpeedRatings"]))
+
+
+		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && $this->config['ck_ve_allow_iso'])
 		{
 			// Issue no. 8
 			// Samsung Mobile phones seems to use a array for ISOSpeedRatings, in that case pick the first array element
@@ -170,14 +229,18 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif_iso),
 			);
 		}
-		if (isset($exif["EXIF"]["WhiteBalance"]))
+
+
+		if (isset($exif["EXIF"]["WhiteBalance"]) && $this->config['ck_ve_allow_wb'])
 		{
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_WHITEB'],
 				'CK_VE_EXIF_VALUE'	=> $this->user->lang['CK_VE_EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')],
 			);
 		}
-		if (isset($exif["EXIF"]["Flash"]))
+
+
+		if (isset($exif["EXIF"]["Flash"]) && $this->config['ck_ve_allow_flash'])
 		{
 			if (isset($this->user->lang['CK_VE_EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
@@ -187,7 +250,9 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-		if (isset($exif["IFD0"]["Make"]))
+
+
+		if (isset($exif["IFD0"]["Make"]) && $this->config['ck_ve_allow_make'])
 		{
 			// make sure we really have a string
 			if (is_string($exif["IFD0"]["Make"]))
@@ -203,7 +268,9 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_make)),
 			);
 		}
-		if (isset($exif["IFD0"]["Model"]))
+
+
+		if (isset($exif["IFD0"]["Model"]) && $this->config['ck_ve_allow_model'])
 		{
 			// make sure we really have a string
 			if (is_string($exif["IFD0"]["Model"]))
@@ -219,7 +286,9 @@ public function ck_ve_get_exif_data($event)
 				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_model)),
 			);
 		}
-		if (isset($exif["EXIF"]["ExposureProgram"]))
+
+
+		if (isset($exif["EXIF"]["ExposureProgram"]) && $this->config['ck_ve_allow_exposure_prog'])
 		{
 			if (isset($this->user->lang['CK_VE_EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
 			{
@@ -229,7 +298,9 @@ public function ck_ve_get_exif_data($event)
 				);
 			}
 		}
-		if (isset($exif["EXIF"]["ExposureBiasValue"]))
+
+
+		if (isset($exif["EXIF"]["ExposureBiasValue"]) && $this->config['ck_ve_allow_exposure_bias'])
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
 			if (($num/$den) == 0)
@@ -246,7 +317,9 @@ public function ck_ve_get_exif_data($event)
 
 			);
 		}
-		if (isset($exif["EXIF"]["MeteringMode"]))
+
+
+		if (isset($exif["EXIF"]["MeteringMode"]) && $this->config['ck_ve_allow_metering'])
 		{
 			if (isset($this->user->lang['CK_VE_EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
 			{
@@ -257,115 +330,96 @@ public function ck_ve_get_exif_data($event)
 			}
 		}
 
-		if (isset($exif['GPS']['GPSLatitude']))
+
+		if (isset($exif['GPS']['GPSLatitude']) && $this->config['ck_ve_allow_gps'])
 		{
 			// we have GPS data, extract the numeric values for degree, minute, second
 			$lat = $exif['GPS']['GPSLatitude'];
 
 			//issue #12: try to fix incorrect coordinates
 			list($num, $dec) = explode('/', $lat[0]);
-			$lat_s = $this->ck_ve_calc_array($num, $dec);
+			$lat_d = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lat[1]);
 			$lat_m = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lat[2]);
-			$lat_v = $this->ck_ve_calc_array($num, $dec);
+			$lat_s = $this->ck_ve_calc_array($num, $dec);
 			// calculate decimal value for latidude, eg for google maps
-			$lat_dec = $lat_s + ($lat_m / 60.0) + ($lat_v / 3600.0);
+			$lat_dec = $lat_d + ($lat_m / 60.0) + ($lat_s / 3600.0);
 
 			$lat_ref = $exif['GPS']['GPSLatitudeRef'];
 			if ($lat_ref == 'S')
 			{
-				$lat_prefix = 'S';
+				$lat_prefix_letter	= 'S';
+				$lat_prefix_plus	= '-';
 			}
 			else
 			{
-				$lat_prefix = 'N';
+				$lat_prefix_letter	= 'N';
+				$lat_prefix_plus	= '+';
 			}
 
 			$lon = $exif['GPS']['GPSLongitude'];
 
 			list($num, $dec) = explode('/', $lon[0]);
-			$lon_s = $this->ck_ve_calc_array($num, $dec);
+			$lon_d = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lon[1]);
 			$lon_m = $this->ck_ve_calc_array($num, $dec);
 
 			list($num, $dec) = explode('/', $lon[2]);
-			$lon_v = $this->ck_ve_calc_array($num, $dec);
+			$lon_s = $this->ck_ve_calc_array($num, $dec);
 
 			// calculate decimal value for latidude, eg for google maps
-			$lon_dec = $lon_s  + ($lon_m / 60.0) + ($lon_v / 3600.0);
+			$lon_dec = $lon_d  + ($lon_m / 60.0) + ($lon_s / 3600.0);
 
 			$lon_ref = $exif['GPS']['GPSLongitudeRef'];
 			if ($lon_ref == 'E')
 			{
-				$lon_prefix = 'E';
+				$lon_prefix_letter	= 'E';
+				$lon_prefix_plus	= '+';
 			}
 			else
 			{
-				$lon_prefix = 'W';
+				$lon_prefix_letter	= 'W';
+				$lon_prefix_plus	= '-';
 			}
 
-/*
-			// show nice debugging in the template, no "echo"
 			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLatitude pref',
-				'CK_VE_EXIF_VALUE'	=>$lat_prefix,
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 0',
-				'CK_VE_EXIF_VALUE'	=>$lat[0],
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 1',
-				'CK_VE_EXIF_VALUE'	=>$lat[1],
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLatitude 2',
-				'CK_VE_EXIF_VALUE'	=>$lat[2],
-			);
-			if (isset($lat[3]))
-			{
-				$exif_data[] = array(
-					'CK_VE_EXIF_NAME'	=> 'GPSLatitude 3',
-					'CK_VE_EXIF_VALUE'	=>$lat[3],
-				);
-			}
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLongitude pref',
-				'CK_VE_EXIF_VALUE'	=>$lon_prefix,
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 0',
-				'CK_VE_EXIF_VALUE'	=>$lon[0],
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 1',
-				'CK_VE_EXIF_VALUE'	=>$lon[1],
-			);
-			$exif_data[] = array(
-				'CK_VE_EXIF_NAME'	=> 'GPSLongitude 2',
-				'CK_VE_EXIF_VALUE'	=>$lon[2],
-			);
-			if (isset($lon[3]))
-			{
-				$exif_data[] = array(
-					'CK_VE_EXIF_NAME'	=> 'GPSLongitude 3',
-					'CK_VE_EXIF_VALUE'	=>$lon[3],
-				);
-			}
-*/
+					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_COORDINATES'],
+					'CK_VE_EXIF_VALUE'	=>  $lat_prefix_letter . ' ' . $lat_d . ' ' . $lat_m . ' ' . $lat_s . '/ ' . $lon_prefix_letter . ' ' . $lon_d . ' ' . $lon_m . ' ' . $lon_s,
 
-			if ($use_google)
+			);
+
+			if ($use_mapservice)
 			{
-				$google_url = 'https://maps.google.com/maps?q=';
-				$google_zoom = '&z=17';
-				$targeturl = $google_url.$lat_prefix.$lat_dec.','.$lon_prefix.$lon_dec.$google_zoom;
-				$targetlink = '<a href="'.$targeturl.'" target="CK_VE_gps">'.$this->user->lang['CK_VE_CLICK_HERE'].'</a>';
+				$mapservice = $this->user->data['ck_ve_mapservice'];
+				$lang_mapservice = $this->user->lang['CK_VE_'.strtoupper($mapservice)];
+				switch ($mapservice) {
+				case 'osm':
+					$targeturl  = 'https://www.openstreetmap.org/?';
+					$targeturl .= '&mlat='.$lat_prefix_plus.$lat_dec;
+					$targeturl .= '&mlon='.$lon_prefix_plus.$lon_dec;
+					$targeturl .= '#map=17';
+					$targeturl .= '/'.$lat_prefix_plus.$lat_dec;
+					$targeturl .= '/'.$lon_prefix_plus.$lon_dec;
+					$targeturl .= '&layers=M';
+					break;
+				case 'googlemaps':
+				default:
+
+					$targeturl  = 'https://maps.google.com/maps?';
+					$targeturl .= 'q=';
+					$targeturl .= $lat_prefix_letter.$lat_dec;
+					$targeturl .= ',';
+					$targeturl .= $lon_prefix_letter.$lon_dec;
+					$targeturl .= '&z=17';
+					break;
+				}
+				$targetlink = '<a href="'.$targeturl.'" target="CK_VE_MAP">'.$this->user->lang['CK_VE_CLICK_HERE'].'</a>';
 				$exif_data[] = array(
-					'CK_VE_EXIF_NAME'	=>$this->user->lang['CK_VE_NAME_MAPSERVICE'],
+					'CK_VE_EXIF_NAME'	=>$lang_mapservice,
 					'CK_VE_EXIF_VALUE'	=>$targetlink,
 				);
 			}
@@ -383,6 +437,63 @@ public function ck_ve_get_exif_data($event)
 	}
 
 }
+
+/**
+ * Initialize default exif display settings for new forums.
+ *
+ * @param \phpbb\event\data $event Forum edit form data.
+ *
+ * @return void
+ */
+public function ck_ve_acp_manage_forums_init($event)
+{
+	$forum_data = $event['forum_data'];
+
+	if ($event['action'] == 'add' && !$event['update'])
+	{
+		$forum_data['ck_ve_show']	= 1;
+	}
+
+	$event['forum_data'] = $forum_data;
+}
+
+/**
+ * Format exif display settings for forum edit form.
+ *
+ * @param \phpbb\event\data $event Forum edit form data.
+ *
+ * @return void
+ */
+public function ck_ve_acp_manage_forums_form($event)
+{
+	$template_data = $event['template_data'];
+	$forum_data = $event['forum_data'];
+
+	$template_data = array_merge($template_data, array(
+			'S_FORUM_CK_VE_SHOW' => $forum_data['ck_ve_show'],
+	));
+
+	$event['template_data'] = $template_data;
+}
+
+/**
+ * Process exif display settings form request data.
+ *
+ * @param \phpbb\event\data $event Forum form request data.
+ *
+ * @return void
+ */
+public function ck_ve_acp_manage_forums_data($event)
+{
+	$forum_data = $event['forum_data'];
+
+	$forum_data = array_merge($forum_data, array(
+			'ck_ve_show' => $this->request->variable('ck_ve_show', 1),
+	));
+
+	$event['forum_data'] = $forum_data;
+}
+
 
 
 

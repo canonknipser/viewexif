@@ -97,7 +97,7 @@ $lang = array_merge($lang, array(
 
 	'CK_VE_SHOW_EXIF'				=> 'anzeigen / verbergen',
 	// 1.1.0: wording changed
-	'CK_VE_CLICK_HERE'				=> 'Klicke hier, um die Karte zu öffnen',
+	'CK_VE_CLICK_HERE'				=> 'Klicken Sie hier, um die Karte zu öffnen',
 	'CK_VE_NAME_MAPSERVICE'			=> 'Google Maps',
 
 	// 1.1.0 new language variables

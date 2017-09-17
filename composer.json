@@ -1,33 +1,37 @@
 {
-    "name": "canonknipser/viewexif",
-    "type": "phpbb-extension",
-    "description": "Show exif-data for images posted as attachment for phpBB 3.1 and 3.2",
-    "homepage": "https://canonknipser.com",
-    "version": "1.0.3",
-    "time": "2017-02-22",
-    "license": "GPL-2.0",
-    "authors": [{
-            "name": "canonknipser",
-            "email": "siekmannfrank@gmail.com",
-            "homepage": "https://forum.shutter-friends.de",
-            "role": "Lead Developer"
-        }],
-    "require": {
-        "php": ">=5.3.3",
-        "composer/installers": "~1.0"
-    },
-    "require-dev": {
-        "phpbb/epv": "dev-master"
-    },
-    "extra": {
-        "display-name": "Show exif-data",
-        "soft-require": {
-            "phpbb/phpbb": "~3.1"
-        },
-        "version-check": {
-            "host": "download.canonknipser.com",
-            "directory": "/v-check",
-            "filename": "viewexif_version.json"
-        }
-    }
+	"name" : "canonknipser/viewexif",
+	"type" : "phpbb-extension",
+	"description" : "Show exif-data for images posted as attachment for phpBB 3.1 and above",
+	"homepage" : "https://canonknipser.com",
+	"version" : "1.1.0",
+	"time" : "2017-04-01",
+	"license" : "GPL-2.0",
+	"authors" : [{
+			"name" : "canonknipser",
+			"email" : "github@canonknipser.com",
+			"homepage" : "https://forum.shutter-friends.de",
+			"role" : "Lead Developer"
+		}, {
+			"name" : "nickvergessen",
+			"role" : "Former developer"
+		}
+	],
+	"require" : {
+		"php" : ">=5.3.3",
+		"composer/installers" : "~1.0"
+	},
+	"require-dev" : {
+		"phpbb/epv" : "dev-master"
+	},
+	"extra" : {
+		"display-name" : "Show exif-data",
+		"soft-require" : {
+			"phpbb/phpbb" : "~3.1"
+		},
+		"version-check" : {
+			"host" : "download.canonknipser.com",
+			"directory" : "/v-check",
+			"filename" : "viewexif_version.json"
+		}
+	}
 }

@@ -1,0 +1,10 @@
+<div id="ck_ve_options">
+	<fieldset>
+		<legend>{{ lang('ACP_CK_VE') }}</legend>
+		<dl>
+			<dt><label for="ck_ve_show">{{ lang('ACP_CK_VE_FORUM_ALLOW') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACP_CK_VE_FORUM_ALLOW_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="ck_ve_show" value="1"{% if S_FORUM_CK_VE_SHOW  %} id="ck_ve_show" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="ck_ve_show" value="0"{% if not S_FORUM_CK_VE_SHOW %} id="ck_ve_show" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+	</fieldset>
+</div>
