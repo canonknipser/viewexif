@@ -169,23 +169,24 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['FocalLength']) && $this->config['ck_ve_allow_focal_length'])
 		{
-			list($num, $den) = explode("/", $exif['EXIF']['FocalLength']);
+
+			$vals = $this->ck_ve_split_fraction($exif['EXIF']['FocalLength']);
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_FOCAL'],
-				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($num/$den)),
+				'CK_VE_EXIF_VALUE'	=> sprintf($this->user->lang['CK_VE_EXIF_FOCAL_EXP'], ($vals['frac'])),
 			);
 		}
 
 		if (isset($exif['EXIF']['ExposureTime']) && $this->config['ck_ve_allow_exposure_time'])
 		{
-			list($num, $den) = explode("/", $exif['EXIF']['ExposureTime']);
-			if ($num > $den)
+			$vals = $this->ck_ve_split_fraction($exif['EXIF']['ExposureTime']);
+			if ($vals['num'] > $vals['den'])
 			{
-				$exif_exposure = $num/$den;
+				$exif_exposure = $vals['frac'];
 			}
 			else
 			{
-				$exif_exposure = ' 1/' . $den/$num ;
+				$exif_exposure = ' 1/' . $vals['invfrac'] ;
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE'],
@@ -195,19 +196,19 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['FNumber']) && $this->config['ck_ve_allow_f_number'])
 		{
-			list($num, $den) = explode("/", $exif['EXIF']['FNumber']);
-			if ($den > 0)
+			$vals = $this->ck_ve_split_fraction($exif['EXIF']['FNumber']);
+			if ($vals['den'] > 0)
 			{
 				$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_APERTURE'],
-					'CK_VE_EXIF_VALUE'	=> "f/" . ($num/$den),
+					'CK_VE_EXIF_VALUE'	=> "f/" . ($vals['frac']),
 				);
 			}
 			else
 			{
 				$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_APERTURE'],
-					'CK_VE_EXIF_VALUE'	=> "f/??",
+					'CK_VE_EXIF_VALUE'	=> "f/" . ($vals['invfrac']),
 				);
 			}
 		}
@@ -291,8 +292,8 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['ExposureBiasValue']) && $this->config['ck_ve_allow_exposure_bias'])
 		{
-			list($num,$den) = explode("/",$exif['EXIF']['ExposureBiasValue']);
-			if (($num/$den) == 0)
+			$vals = $this->ck_ve_split_fraction($exif['EXIF']['ExposureBiasValue']);
+			if ($vals['frac'] == 0)
 			{
 				$exif_exposure_bias = 0;
 			}
@@ -324,14 +325,15 @@ public function ck_ve_get_exif_data($event)
 			$lat = $exif['GPS']['GPSLatitude'];
 
 			//issue #12: try to fix incorrect coordinates
-			list($num, $dec) = explode('/', $lat[0]);
-			$lat_d = $this->ck_ve_calc_array($num, $dec);
+			$vars = $this->ck_ve_split_fraction($lat[0]);
+			$lat_d = $this->ck_ve_calc_array($vars['num'], $vars['den']);
 
-			list($num, $dec) = explode('/', $lat[1]);
-			$lat_m = $this->ck_ve_calc_array($num, $dec);
+			$vars = $this->ck_ve_split_fraction($lat[1]);
+			$lat_m = $this->ck_ve_calc_array($vars['num'], $vars['den']);
 
-			list($num, $dec) = explode('/', $lat[2]);
-			$lat_s = $this->ck_ve_calc_array($num, $dec);
+			$vars = $this->ck_ve_split_fraction($lat[2]);
+			$lat_s = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+
 			// calculate decimal value for latidude, eg for google maps
 			$lat_dec = $lat_d + ($lat_m / 60.0) + ($lat_s / 3600.0);
 
@@ -349,14 +351,16 @@ public function ck_ve_get_exif_data($event)
 
 			$lon = $exif['GPS']['GPSLongitude'];
 
-			list($num, $dec) = explode('/', $lon[0]);
-			$lon_d = $this->ck_ve_calc_array($num, $dec);
 
-			list($num, $dec) = explode('/', $lon[1]);
-			$lon_m = $this->ck_ve_calc_array($num, $dec);
+			$vars = $this->ck_ve_split_fraction($lon[0]);
+			$lon_d = $this->ck_ve_calc_array($vars['num'], $vars['den']);
 
-			list($num, $dec) = explode('/', $lon[2]);
-			$lon_s = $this->ck_ve_calc_array($num, $dec);
+			$vars = $this->ck_ve_split_fraction($lon[1]);
+			$lon_m = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+
+			$vars = $this->ck_ve_split_fraction($lon[2]);
+			$lon_s = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+
 
 			// calculate decimal value for latidude, eg for google maps
 			$lon_dec = $lon_d  + ($lon_m / 60.0) + ($lon_s / 3600.0);
@@ -372,6 +376,11 @@ public function ck_ve_get_exif_data($event)
 				$lon_prefix_letter	= 'W';
 				$lon_prefix_plus	= '-';
 			}
+			$exif_data[] = array(
+					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_COORDINATES'].'--DEBUG ',
+					'CK_VE_EXIF_VALUE'	=> $lon_ref. ' - ' . $lon[0]. ' - ' . $lon[1]. ' - ' . $lon[2]. ' - ' . $lat_ref. ' - ' . $lat[0]. ' - ' . $lat[1]. ' - ' . $lat[2]
+
+			);
 
 			$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_COORDINATES'],
@@ -504,4 +513,39 @@ private function ck_ve_calc_array($v1 = 0, $v2 = 0)
 
 }
 
+
+// split fraction values
+private function ck_ve_split_fraction($string = NULL)
+{
+	$arr_ret = array(
+				'num' => 0,
+				'den' => 0,
+				'frac' => 'n.a.',
+				'invfrac' => 'n.a.',
+	);
+	if (isset($string) && strlen($string) > 0)
+	{
+		$arr = explode("/", $string);
+
+		$arr_ret['num'] = 0 + $arr[0];	// make sure we have numeric values, position 0 is the numerator of the fraction
+		$arr_ret['den'] = 0 + $arr[1];	// dito, position 1 is the denominator of the fraction
+		if ($arr_ret['den'] == 0)
+		{
+			$arr_ret['frac'] = 'n.a.';
+		}
+		else
+		{
+			$arr_ret['frac'] = ($arr_ret['num'] / $arr_ret['den']);
+		}
+		if ($arr_ret['num'] == 0)
+		{
+			$arr_ret['invfrac'] = 'n.a.';
+		}
+		else
+		{
+			$arr_ret['invfrac'] = ($arr_ret['den'] / $arr_ret['num']);
+		}
+	}
+	return $arr_ret;
+}
 }
