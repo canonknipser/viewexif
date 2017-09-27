@@ -2,7 +2,7 @@
 
 (newest entries on top)
 
-## 1.1.0.- 2017-09-17
+## 1.1.0 2017-09-27
 - [Issue #1: GPS-Links to other map services](https://github.com/canonknipser/viewexif/issues/1)
 
 	- google maps
@@ -25,6 +25,9 @@
 		Line 44: you probably meant `\phpbb\config\config `here.
 
 	- Please remove the  large block of commented code, lines 311-359.
+
+- [Issue #18: changed behavior of list-function](https://github.com/canonknipser/viewexif/issues/18)
+
 
 - new acp module
 - new ucp module
