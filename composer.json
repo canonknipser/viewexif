@@ -3,8 +3,8 @@
 	"type" : "phpbb-extension",
 	"description" : "Show exif-data for images posted as attachment for phpBB 3.1 and above",
 	"homepage" : "https://canonknipser.com",
-	"version" : "1.1.0",
-	"time" : "2017-04-01",
+	"version" : "1.1.1",
+	"time" : "2017-09-27",
 	"license" : "GPL-2.0",
 	"authors" : [{
 			"name" : "canonknipser",

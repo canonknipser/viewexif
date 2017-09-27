@@ -1,4 +1,7 @@
 /* div-data for exif-formatting */
+div.ck_ve_exifsection {
+	margin: 1px;
+}
 div.ck_ve_exifblock {
 	margin: 0;
 	overflow-x: auto;

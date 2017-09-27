@@ -44,15 +44,4 @@ class data_1_1_0 extends \phpbb\db\migration\migration
 		);
 	}
 
-
-	public function revert_data()
-	{
-		return array(
-				array('config.remove', array('ck_ve_active_global')),
-				array('config.remove', array('ck_ve_use_maps')),
-				array('config.remove', array('ck_ve_version')),
-		);
-	}
-
-
 }

@@ -69,7 +69,7 @@ class main_module
 			'S_CK_VE_ALLOW_EXPOSURE_BIAS'	=> $config['ck_ve_allow_exposure_bias'],
 			'S_CK_VE_ALLOW_METERING'		=> $config['ck_ve_allow_metering'],
 			'S_CK_VE_ALLOW_GPS'				=> $config['ck_ve_allow_gps'],
-			'S_ACP_ACTION	'				=> $this->u_action,
+			'S_ACP_ACTION'					=> $this->u_action,
 		));
 	}
 }

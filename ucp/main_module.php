@@ -27,7 +27,7 @@ class main_module
 
 		$data = array(
 			'ck_ve_mapservice' => $request->variable('ck_ve_mapservice', $user->data['ck_ve_mapservice']),
-			'ck_ve_active' => $request->variable('ck_ve_active', $user->data['ck_ve_active']),
+			'ck_ve_active' => $request->variable('ck_ve_active', (bool) $user->data['ck_ve_active']),
 		);
 
 		$s_mapservice_options = '<option value="googlemaps"' . (($data['ck_ve_mapservice'] == 'googlemaps') ? ' selected="selected"' : '') . '>'.$user->lang('UCP_CK_VE_GOOGLEMAPS').'</option>';
@@ -52,8 +52,8 @@ class main_module
 
 		$template->assign_vars(array(
 			'S_CK_VE_USER_MAPSERVICE'	=> $s_mapservice_options,
-			'S_CK_VE_ACTIVE'		=> $data['ck_ve_active'],
-			'S_UCP_ACTION	'	=> $this->u_action,
+			'S_CK_VE_ACTIVE'			=> $data['ck_ve_active'],
+			'S_UCP_ACTION'				=> $this->u_action,
 		));
 	}
 }
