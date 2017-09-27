@@ -102,7 +102,7 @@ public function ck_ve_get_exif_data($event)
 			$active_exif = true;
 		}
 	}
-	// validation issue: load language file only when needed
+	// validation issue: load language file only when needed -> solved
 	// FIXME: add_lang_ext is deprecated in 3.2, replaced in 3.3
 	$this->user->add_lang_ext('canonknipser/viewexif', 'viewexif');
 
@@ -170,6 +170,7 @@ public function ck_ve_get_exif_data($event)
 		if (isset($exif['EXIF']['FocalLength']) && $this->config['ck_ve_allow_focal_length'])
 		{
 
+			// Issue #18, php 7 changed behaviour of list()-Order!
 			$vals = $this->ck_ve_split_fraction($exif['EXIF']['FocalLength']);
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_FOCAL'],
@@ -179,6 +180,7 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['ExposureTime']) && $this->config['ck_ve_allow_exposure_time'])
 		{
+			// Issue #18, php 7 changed behaviour of list()-Order!
 			$vals = $this->ck_ve_split_fraction($exif['EXIF']['ExposureTime']);
 			if ($vals['num'] > $vals['den'])
 			{
@@ -196,6 +198,7 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['FNumber']) && $this->config['ck_ve_allow_f_number'])
 		{
+			// Issue #18, php 7 changed behaviour of list()-Order!
 			$vals = $this->ck_ve_split_fraction($exif['EXIF']['FNumber']);
 			if ($vals['den'] > 0)
 			{
@@ -292,6 +295,7 @@ public function ck_ve_get_exif_data($event)
 
 		if (isset($exif['EXIF']['ExposureBiasValue']) && $this->config['ck_ve_allow_exposure_bias'])
 		{
+			// Issue #18, php 7 changed behaviour of list()-Order!
 			$vals = $this->ck_ve_split_fraction($exif['EXIF']['ExposureBiasValue']);
 			if ($vals['frac'] == 0)
 			{
@@ -323,64 +327,74 @@ public function ck_ve_get_exif_data($event)
 		{
 			// we have GPS data, extract the numeric values for degree, minute, second
 			$lat = $exif['GPS']['GPSLatitude'];
+			$lat_ref = $exif['GPS']['GPSLatitudeRef'];
 
 			//issue #12: try to fix incorrect coordinates
+			// Issue #18, php 7 changed behaviour of list()-Order!
 			$vars = $this->ck_ve_split_fraction($lat[0]);
-			$lat_d = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+			$lat_d = $vars['frac'];
 
 			$vars = $this->ck_ve_split_fraction($lat[1]);
-			$lat_m = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+			$lat_m = $vars['frac'];
 
 			$vars = $this->ck_ve_split_fraction($lat[2]);
-			$lat_s = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+			$lat_s = $vars['frac'];
 
 			// calculate decimal value for latidude, eg for google maps
-			$lat_dec = $lat_d + ($lat_m / 60.0) + ($lat_s / 3600.0);
-
-			$lat_ref = $exif['GPS']['GPSLatitudeRef'];
-			if ($lat_ref == 'S')
+			if (is_numeric($lat_d) && is_numeric($lat_m) && is_numeric($lat_s))
 			{
-				$lat_prefix_letter	= 'S';
-				$lat_prefix_plus	= '-';
+				$lat_dec = $lat_d + ($lat_m / 60.0) + ($lat_s / 3600.0);
+				if ($lat_ref == 'S')
+				{
+					$lat_prefix_letter	= 'S';
+					$lat_prefix_plus	= '-';
+				}
+				else
+				{
+					$lat_prefix_letter	= 'N';
+					$lat_prefix_plus	= '+';
+				}
 			}
 			else
 			{
-				$lat_prefix_letter	= 'N';
-				$lat_prefix_plus	= '+';
+				$lat_dec = 'n.a.';
+				$lat_prefix_letter	= '';
+				$lat_prefix_plus	= '';
 			}
 
 			$lon = $exif['GPS']['GPSLongitude'];
-
+			$lon_ref = $exif['GPS']['GPSLongitudeRef'];
 
 			$vars = $this->ck_ve_split_fraction($lon[0]);
-			$lon_d = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+			$lon_d = $vars['frac'];
 
 			$vars = $this->ck_ve_split_fraction($lon[1]);
-			$lon_m = $this->ck_ve_calc_array($vars['num'], $vars['den']);
+			$lon_m = $vars['frac'];
 
 			$vars = $this->ck_ve_split_fraction($lon[2]);
-			$lon_s = $this->ck_ve_calc_array($vars['num'], $vars['den']);
-
+			$lon_s = $vars['frac'];
 
 			// calculate decimal value for latidude, eg for google maps
-			$lon_dec = $lon_d  + ($lon_m / 60.0) + ($lon_s / 3600.0);
-
-			$lon_ref = $exif['GPS']['GPSLongitudeRef'];
-			if ($lon_ref == 'E')
+			if (is_numeric($lon_d) && is_numeric($lon_m) && is_numeric($lon_s))
 			{
-				$lon_prefix_letter	= 'E';
-				$lon_prefix_plus	= '+';
+				$lon_dec = $lon_d  + ($lon_m / 60.0) + ($lon_s / 3600.0);
+				if ($lon_ref == 'E')
+				{
+					$lon_prefix_letter	= 'E';
+					$lon_prefix_plus	= '+';
+				}
+				else
+				{
+					$lon_prefix_letter	= 'W';
+					$lon_prefix_plus	= '-';
+				}
 			}
 			else
 			{
-				$lon_prefix_letter	= 'W';
-				$lon_prefix_plus	= '-';
+				$lon_dec = 'n.a.';
+				$lon_prefix_letter	= '';
+				$lon_prefix_plus	= '';
 			}
-			$exif_data[] = array(
-					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_COORDINATES'].'--DEBUG ',
-					'CK_VE_EXIF_VALUE'	=> $lon_ref. ' - ' . $lon[0]. ' - ' . $lon[1]. ' - ' . $lon[2]. ' - ' . $lat_ref. ' - ' . $lat[0]. ' - ' . $lat[1]. ' - ' . $lat[2]
-
-			);
 
 			$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_COORDINATES'],
@@ -388,7 +402,7 @@ public function ck_ve_get_exif_data($event)
 
 			);
 
-			if ($use_mapservice)
+			if ($use_mapservice && is_numeric($lat_dec) && is_numeric($lon_dec))
 			{
 				$mapservice = $this->user->data['ck_ve_mapservice'];
 				$lang_mapservice = $this->user->lang['CK_VE_'.strtoupper($mapservice)];
@@ -491,37 +505,20 @@ public function ck_ve_acp_manage_forums_data($event)
 	$event['forum_data'] = $forum_data;
 }
 
-
-
-
-private function ck_ve_calc_array($v1 = 0, $v2 = 0)
-{
-	// sanitize vars
-	$r1 = 0;
-	$v1 = 0 + $v1;
-	$v2 = 0 + $v2;
-	// no division by zero
-	if ($v2 == 0)
-	{
-		$r1 = $v1;
-	}
-	else
-	{
-		$r1 = $v1 / $v2;
-	}
-	return $r1;
-
-}
-
-
-// split fraction values
+/**
+ * split fraction exif data and return values, fraction and inversed fraction
+ *
+ * @string string $string String with exif fraction value.
+ *
+ * @return array
+ */
 private function ck_ve_split_fraction($string = NULL)
 {
 	$arr_ret = array(
-				'num' => 0,
-				'den' => 0,
-				'frac' => 'n.a.',
-				'invfrac' => 'n.a.',
+				'num'		=> 0,
+				'den'		=> 0,
+				'frac'		=> 'n.a.',
+				'invfrac'	=> 'n.a.',
 	);
 	if (isset($string) && strlen($string) > 0)
 	{
@@ -548,4 +545,5 @@ private function ck_ve_split_fraction($string = NULL)
 	}
 	return $arr_ret;
 }
+
 }
