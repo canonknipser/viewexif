@@ -8,9 +8,9 @@
             "security": false
         },
         "1.1": {
-            "current": "1.1.0",
+            "current": "1.1.1",
             "announcement": "https://www.phpbb.com/community/viewtopic.php?f=456&t=2373801",
-            "download": "http://download.canonknipser.com/canonknipser_viewexif_1_1_0.zip",
+            "download": "http://download.canonknipser.com/canonknipser_viewexif_1_1_1.zip",
             "eol": null,
             "security": false
         }
