@@ -1,13 +1,10 @@
 <?php
 /**
  *
- * This file is part of the phpBB Forum Software package.
- *
- * @copyright (c) phpBB Limited <https://www.phpbb.com>
+  * This file is part of the viewexif extension for phpBB.
+ * @package View Exif
+ * @copyright (c) 2017 Frank Jakobs (canonknipser)
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
- * For full copyright and license information, please see
- * the docs/CREDITS.txt file.
  *
  */
 
