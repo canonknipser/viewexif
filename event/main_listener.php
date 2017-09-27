@@ -121,7 +121,7 @@ public function ck_ve_get_exif_data($event)
 			// display also the original value of date/time
 			$exif_data[] = array(
 					'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_DATE_ORIG'],
-					'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif['EXIF']['DateTimeOriginal']),
+					'CK_VE_EXIF_VALUE'	=> $this->ck_ve_clean_string($exif['EXIF']['DateTimeOriginal']),
 			);
 
 			if ($this->user->data['user_id'] == ANONYMOUS)
@@ -222,7 +222,7 @@ public function ck_ve_get_exif_data($event)
 			$exif_iso = "".$exif_iso;
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_ISO'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars($exif_iso),
+				'CK_VE_EXIF_VALUE'	=> $this->ck_ve_clean_string($exif_iso),
 			);
 		}
 
@@ -258,7 +258,7 @@ public function ck_ve_get_exif_data($event)
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MAKE'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_make)),
+				'CK_VE_EXIF_VALUE'	=> $this->ck_ve_clean_string(ucwords($exif_make)),
 			);
 		}
 
@@ -275,7 +275,7 @@ public function ck_ve_get_exif_data($event)
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_CAM_MODEL'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(ucwords($exif_model)),
+				'CK_VE_EXIF_VALUE'	=> $this->ck_ve_clean_string(ucwords($exif_model)),
 			);
 		}
 
@@ -304,7 +304,7 @@ public function ck_ve_get_exif_data($event)
 			}
 			$exif_data[] = array(
 				'CK_VE_EXIF_NAME'	=> $this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS'],
-				'CK_VE_EXIF_VALUE'	=> htmlspecialchars(sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias)),
+				'CK_VE_EXIF_VALUE'	=> $this->ck_ve_clean_string(sprintf($this->user->lang['CK_VE_EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias)),
 
 			);
 		}
@@ -509,7 +509,7 @@ public function ck_ve_acp_manage_forums_data($event)
  *
  * @return array
  */
-private function ck_ve_split_fraction($string = NULL)
+private function ck_ve_split_fraction($string = null)
 {
 	$arr_ret = array(
 				'num'		=> 0,
@@ -541,6 +541,19 @@ private function ck_ve_split_fraction($string = NULL)
 		}
 	}
 	return $arr_ret;
+}
+
+/**
+ * clean a string from hmtl characters
+ *
+ * @string string $string String with exif string.
+ *
+ * @return string
+ */
+private function ck_ve_clean_string($string = null)
+{
+	// use htmlspecialchar at the moment, should be rewritten due to epv issues
+	return htmlspecialchars($string);
 }
 
 }
