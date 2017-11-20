@@ -20,7 +20,7 @@ class data_1_1_1 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.update', array('ck_ve_version', '1.1.1')),
+			array('config.update', array('ck_ve_version', '1.1.1')), // fixed issue #19
 		);
 	}
 
