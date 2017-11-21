@@ -353,7 +353,7 @@ class main_listener implements EventSubscriberInterface
 				}
 				else
 				{
-					$lat_dec = 'n.a.';
+					$lat_dec = $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'];	// fixed issue #20
 					$lat_prefix_letter	= '';
 					$lat_prefix_plus	= '';
 				}
@@ -387,7 +387,7 @@ class main_listener implements EventSubscriberInterface
 				}
 				else
 				{
-					$lon_dec = 'n.a.';
+					$lon_dec = $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'];	// fixed issue #20
 					$lon_prefix_letter	= '';
 					$lon_prefix_plus	= '';
 				}
@@ -513,8 +513,8 @@ class main_listener implements EventSubscriberInterface
 		$arr_ret = array(
 					'num'		=> 0,
 					'den'		=> 0,
-					'frac'		=> 'n.a.',
-					'invfrac'	=> 'n.a.',
+					'frac'		=> $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'],	// fixed issue #20
+					'invfrac'	=> $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'],	// fixed issue #20
 		);
 		if (isset($string) && strlen($string) > 0)
 		{
@@ -524,7 +524,7 @@ class main_listener implements EventSubscriberInterface
 			$arr_ret['den'] = 0 + $arr[1];	// dito, position 1 is the denominator of the fraction
 			if ($arr_ret['den'] == 0)
 			{
-				$arr_ret['frac'] = 'n.a.';
+				$arr_ret['frac'] = $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'];	// fixed issue #20
 			}
 			else
 			{
@@ -532,7 +532,7 @@ class main_listener implements EventSubscriberInterface
 			}
 			if ($arr_ret['num'] == 0)
 			{
-				$arr_ret['invfrac'] = 'n.a.';
+				$arr_ret['invfrac'] = $this->user->lang['CK_VE_EXIF_NOT_AVAILABLE'];	// fixed issue #20
 			}
 			else
 			{
