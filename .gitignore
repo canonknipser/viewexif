@@ -3,3 +3,4 @@
 /.directory
 phpunit.xml.dist
 /composer.phar
+/archive/

@@ -34,7 +34,36 @@ Whenever possible, a element name starts with (or contains) the abbrevated vendo
 
 	- datatype string
 	- current version number
+	- set during migration
+
+	*following variable names should be self explaing, all of type boolean*
 	 
+- ck\_ve\_allow\_date
+	 
+- ck\_ve\_allow\_focal\_length
+	 
+- ck\_ve\_allow\_exposure\_time
+	 
+- ck\_ve\_allow\_f\_number
+	 
+- ck\_ve\_allow\_iso
+
+- ck\_ve\_allow\_wb
+
+- ck\_ve\_allow\_flash
+
+- ck\_ve\_allow\_make
+
+- ck\_ve\_allow\_model
+
+- ck\_ve\_allow\_exposure\_prog
+
+- ck\_ve\_allow\_exposure\_bias
+
+- ck\_ve\_allow\_metering
+
+- ck\_ve\_allow\_gps
+
 ## User Control Panel
 - new register UCP\_CK\_VE\_TITLE
 - new module
