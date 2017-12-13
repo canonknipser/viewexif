@@ -12,8 +12,20 @@ Contains language file for version **1.0.2** and **1.0.3** of viewexif, followin
 * es (spanish)
 * fr (french)
 * ru (russian)
+
 ### 1.1.0
 Contains language file for version **1.1.0** and **1.1.1** of viewexif, following languages exist
+* en (british english)
+* de (german casual)
+* de-x-sie (german formal)
+* fr (french)
+
+### 1.1.2
+Contains language files for version **1.1.2** of viewexif, 
+
+Some files in the folders were renamed, no further language changes" 
+
+Following languages exist
 * en (british english)
 * de (german casual)
 * de-x-sie (german formal)
