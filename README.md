@@ -1,6 +1,6 @@
 View Exif
 ===========
-viewexif display some exif data for attached images. It will not work for images linked from other sources using the bbCode [img] or for images in signatures, avatars etc.
+viewexif display some exif data for attached images. It will **not** work for images linked from other sources using the bbCode [img] or for images in signatures, avatars etc.
 
 
 ## Requirements
