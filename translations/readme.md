@@ -23,7 +23,7 @@ Contains language files for version **1.1.0** and **1.1.1** of viewexif, followi
 ### 1.1.2
 Contains language files for version **1.1.2** of viewexif, 
 
-Some files in the folders were renamed, no further language changes" 
+Some files in the folders were renamed, no further language changes 
 
 Following languages exist
 * de (german casual)
