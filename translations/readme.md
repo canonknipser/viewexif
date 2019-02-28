@@ -6,27 +6,28 @@ If you want to contribute to the translations, please feel free to send a pull r
 You can also upload translations to the [support section on phpBB.com](https://www.phpbb.com/customise/db/extension/view_exif_data/support), see [the translation topic over there](https://www.phpbb.com/customise/db/extension/view_exif_data/support/topic/165751) or in the [support section of my contribution board](http://canonknipser.com/viewforum.php?f=2)
 ## Version folders
 ### 1.0.3
-Contains language file for version **1.0.2** and **1.0.3** of viewexif, following languages exist
-* en (british english)
+Contains language files for version **1.0.2** and **1.0.3** of viewexif, following languages exist
 * de (german casual)
+* en (british english)
 * es (spanish)
 * fr (french)
 * ru (russian)
 
 ### 1.1.0
-Contains language file for version **1.1.0** and **1.1.1** of viewexif, following languages exist
-* en (british english)
+Contains language files for version **1.1.0** and **1.1.1** of viewexif, following languages exist
 * de (german casual)
 * de-x-sie (german formal)
+* en (british english)
 * fr (french)
 
 ### 1.1.2
 Contains language files for version **1.1.2** of viewexif, 
 
-Some files in the folders were renamed, no further language changes" 
+Some files in the folders were renamed, no further language changes 
 
 Following languages exist
-* en (british english)
 * de (german casual)
 * de-x-sie (german formal)
+* en (british english)
+* es (spanish)
 * fr (french)
