@@ -5,7 +5,7 @@
 	"homepage" : "https://canonknipser.com",
 	"version" : "1.1.2",
 	"time" : "2017-12-13",
-	"license" : "GPL-2.0",
+	"license" : "GPL-2.0-only",
 	"authors" : [{
 			"name" : "canonknipser",
 			"email" : "github@canonknipser.com",
